@@ -1,0 +1,45 @@
+
+#chartContainer{
+    width: 218px !important;
+    height: 300px !important;
+   }
+   .canvasjs-chart-canvas{
+    width: 218px !important;
+    height: 300px !important;
+   }
+   canvas{
+    width: 218px !important;
+    height: 300px !important;
+   }
+   
+   
+   #sortable1 {
+    width: 100%;
+    min-height: 110px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    margin-right: 10px;
+    }
+    #sortable2 {
+    width: 100%;
+    min-height: 110px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    margin-right: 10px;
+    }
+    #sortable1 li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 0.8em;
+    width: 208px;
+     float:left;
+    }
+    #sortable2 li {
+    margin: 0 5px 5px 0px;
+    padding: 5px;
+    font-size: 0.8em;
+    width: 228px;
+    }
+   

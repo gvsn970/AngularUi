@@ -1,0 +1,136 @@
+<div class="row page-titles">
+  <div class="col-lg-12">
+  <div class="col-md-7 align-self-center" style="float: left;">
+      <h3 class="text-themecolor">Jira Configuration</h3>
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/Create Release">Configure Settings</a></li>
+          <li class="breadcrumb-item active">Jira</li>
+      </ol>
+</div>
+
+  <div class="col-md-5 align-self-center text-right m-t-10" style="float: right;">
+
+     <div class="input-group-prepend col-md-3" style="float: right;">
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+    <div class="dropdown-menu">
+            <a class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+        </div>
+    </div>
+
+    <div class="form-group col-md-4 p-r-0 p-l-0" style="float: right;">
+        <select class="form-control">
+        <option value="0">Product One</option>
+        <option value="1">Product Two</option>
+        </select>
+</div>
+<div class="form-group col-md-5" style="float: right;">
+    <select class="form-control">
+    <option value="0" disabled>Import Features From</option>
+    <option value="1">Jira</option>
+    <option value="2">Bugzilla</option>
+    </select>
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+
+ 
+
+<div class="col-lg-12"><div class="card"><div class="card-body">
+    <div id="msg" *ngIf=success_message class="alert alert-success">  {{status_message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+        </div>
+
+        <div id="msg" *ngIf=fail_message class="alert alert-danger  m-t-10">  {{status_message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+            </div>
+  <form *ngIf=jira_new class="m-t-40 col-md-8 offset-md-2"  #configureJira="ngForm"   (ngSubmit)="onCofigure(configureJira.value)">
+
+    <div class="form-group m-t-10 row">
+            <label for="example-text-input" class="col-3 col-form-label text-right">URL:</label>
+            <div class="col-7">
+                <input name="url"   class="form-control" type="url"  ngModel />
+               
+            </div>
+    </div>
+    <div class="form-group m-t-10 row">
+      <label for="example-text-input" class="col-3 col-form-label text-right">User Name:</label>
+      <div class="col-7">
+        <input name="user_name" class="form-control"type="text"   ngModel >
+       
+      </div>
+    </div>
+    <div class="form-group m-t-10 row">
+      <label for="example-text-input" class="col-3 col-form-label text-right">Password:</label>
+      <div class="col-7">
+            
+           
+        <input name="password"   class="form-control"type="Password"   ngModel >
+        
+      </div>
+  </div>
+    
+
+    <div class="form-group m-t-10 row">
+        <div class="col-3"></div>
+  <div class="col-7">
+  <button type="submit" class="btn btn-info" >Configure</button>
+ 
+  
+  
+</div> 
+    </div>
+    
+ </form>
+
+ <form *ngIf=!jira_new class="m-t-40 col-md-8 offset-md-2"  #updateJira="ngForm"   (ngSubmit)="onUpdate(updateJira.value)">
+<div *ngFor="let item of jira">
+    <div class="form-group m-t-10 row">
+            <label for="example-text-input" class="col-3 col-form-label text-right">URL:</label>
+            <div class="col-7">
+                <input name="url" *ngIf=edit class="form-control" type="url"  value={{item.application_url}} ngModel={{item.application_url}} />
+                <input name="url"  *ngIf=!edit disabled class="form-control" type="url" value={{item.application_url}} ngModel={{item.application_url}}>
+            </div>
+    </div>
+    <div class="form-group m-t-10 row">
+      <label for="example-text-input" class="col-3 col-form-label text-right">User Name:</label>
+      <div class="col-7">
+        <input name="user_name" *ngIf=edit class="form-control"type="text"   value={{item.user_name}} ngModel={{item.user_name}} >
+        <input name="user_name" *ngIf=!edit disabled class="form-control"type="text" value={{item.user_name}} ngModel={{item.user_name}}>
+      </div>
+    </div>
+    <div class="form-group m-t-10 row">
+      <label for="example-text-input" class="col-3 col-form-label text-right">Password:</label>
+      <div class="col-7">
+            
+            <input name="jira_configuration_id" *ngIf=edit class="form-control"type="text" value={{item.jira_configuration_id}} ngModel={{item.jira_configuration_id}} hidden>
+        <input name="password" *ngIf=edit class="form-control"type="Password"   value={{item.password}} ngModel={{item.password}} >
+        <input name="password" *ngIf=!edit disabled class="form-control"type="Password" value={{item.password}} ngModel={{item.password}}>
+      </div>
+  </div>
+    
+
+    <div class="form-group m-t-10 row">
+        <div class="col-3"></div>
+  <div class="col-7">
+  <button type="submit" class="btn btn-info" *ngIf=edit >Configure</button>
+ 
+  <button type="button" class="btn btn-inverse m-l-10" *ngIf=!edit (click)=onEdit() >Edit</button>
+  
+</div> 
+    </div>
+</div>  
+ </form>
+
+
+ 
+  
+</div></div></div>

@@ -1,0 +1,17 @@
+.file {
+    visibility: hidden;
+    position: absolute;
+    }
+
+    .box{
+        color: #fff;
+        padding: 0px;
+        display: none;
+        margin-top: 20px;
+    }
+    .red{
+    background: no-repeat;
+    }
+    .blue{
+        background: no-repeat;
+        }

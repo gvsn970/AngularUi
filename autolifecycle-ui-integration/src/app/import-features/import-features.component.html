@@ -1,0 +1,227 @@
+<div class="row page-titles">
+  <div class="col-lg-12">
+  <div class="col-md-7 align-self-center" style="float: left;">
+      <h3 class="text-themecolor">Jira</h3>
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/Create Release">Features</a></li>
+          <li class="breadcrumb-item">Import Features</li>
+          <li class="breadcrumb-item active">Jira</li>
+      </ol>
+</div>
+
+  <div class="col-md-5 align-self-center text-right m-t-10" style="float: right;">
+
+     <div class="input-group-prepend col-md-3" style="float: right;">
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+    <div class="dropdown-menu">
+            <a class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+        </div>
+    </div>
+
+    <div class="form-group col-md-4 p-r-0 p-l-0" style="float: right;">
+            <select name="select" (change)="productSelected($event)" id="select" required class="form-control" ngModel={{product_id}} #select>
+                 
+                    <option *ngFor="let item of products_list" value= {{item.product_id}}>{{item.product_name}}--{{item.product_line_name}}</option>
+                  </select> 
+</div>
+<div class="form-group col-md-5" style="float: right;">
+    
+
+    <!-- <select *ngIf=isIssue name="select" (change)="releaseSelected($event)" id="select" required class="form-control" #select>
+            <option disabled>Select Release</option>    
+            <option *ngFor="let item of release_list" value= {{item.releaseId}}>{{item.releasename}}</option>
+          </select> -->
+</div>
+
+</div>
+</div>
+ 
+
+
+
+
+
+  <div class="col-md-12">
+        <div class="col-lg-12"><div class="card"><div class="card-body">
+                
+    <div class="input-group">
+      <ul class="icheck-list">
+          <li class="pull-left m-r-20">
+              <input (click)=getBacklogs()  type="radio" name="importfeatures" value="backlogs">
+              <label>Backlogs</label>
+          </li>
+          <li class="pull-left m-r-20">
+              <input (click)=getIssues() type="radio" name="importfeatures" value="issues">
+              <label>Issues</label>
+          </li>
+          <!-- <li class="pull-left m-r-20">
+            <input (click)=getEpics() type="radio" name="importfeatures" value="epics">
+            <label>Epics</label>
+
+          
+        </li> -->
+      </ul> 
+  </div>
+ 
+  </div>
+
+  <div class="col-md-12 box backlogs">
+     
+  <div class="col-md-3 pull-left"><button type="botton" (click)=importFeatures() class="btn btn-info">Import</button></div>
+  
+  <div class="row col-md-12">
+        <div id="msg" *ngIf=fail_message class="alert alert-danger  m-t-10">  {{status_message}}
+               
+            </div>
+    <div class="table-responsive m-t-0" *ngIf=isMapped>
+            <div id="msg" *ngIf="backlogs_list.length==0" class="alert alert-warning  m-t-10">  Selected Product has no Backlogs to Import.
+               
+                </div>
+      <table id="myTable" class="table table-bordered table-striped m-t-10" *ngIf=isMapped>
+          <thead>
+              <tr> 
+                  <th *ngIf=backlogs_response>Status</th>
+                  <th><input type="checkbox" onClick="toggle(this)" /></th>
+                  <th>Key</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Assignee</th>
+                  <th>Issue Type</th>
+                  <th>Created On</th>
+                  <th>Created By</th>
+              </tr>
+          </thead>
+          <tbody>
+              
+              <tr   *ngFor="let item of backlogs_list;index as index">
+                    
+                    <td id="id{{index}}" *ngIf=backlogs_response (click)=hasClass(index)  > 
+                         
+                            <div *ngFor="let i of backlogs_response_list;index as index">
+
+                           <div *ngIf="i.issue_id==item.issueid" >
+                                
+                                
+                                
+                               <div *ngIf="i.statusCode==1" >
+                                    <p style="color: green">Import Success</p>
+                               </div>
+                               <div *ngIf="i.statusCode==0">
+                                    <p style="color:red">Import Failed</p>
+                               </div>
+                               <div *ngIf="i.statusCode==2">
+                                    <p style="color:orangered">Already Imported</p>
+                               </div>
+                               
+                           
+                        
+                         
+                        </div>
+                    </div>
+                    </td>
+                  <td id={{item.issueid}}><input type="checkbox" name="foo" value="{{item.issueid}}"></td>
+                  
+                  <td>{{item.issueKey}}</td>
+                  <td>{{item.issueName}}</td>
+                  <td>{{item.issueTypeDescription}}</td>
+                  <td>{{(item.issueAssigneeName == null) ? item.issueAssigneeName : "Not Assigned" }}</td>
+                  <td>{{item.issueTypeName}}</td>
+                  <td>{{item.issueCreatedon | date}}</td>
+                  <td>{{item.issueCreaterName}}</td>
+              </tr>
+              
+          </tbody>
+      </table>
+  </div>
+  <div>
+
+       
+
+  </div>
+  </div>
+  </div>
+  <div class="col-md-12 box issues">
+        
+<div class="col-md-1 pull-left"><button type="submit" class="btn btn-info">Import</button></div>
+<div class="col-md-3 pull-left">
+        <select *ngIf=isIssue name="select" (change)="releaseSelected($event)" id="select" required class="form-control" #select>
+                <option disabled>Select Release</option>    
+                <option *ngFor="let item of release_list" value= {{item.releaseId}}>{{item.releasename}}</option>
+              </select>
+              </div>
+<div class="row col-md-12">
+        <div id="msg" *ngIf=fail_message class="alert alert-danger  m-t-10">  {{status_message}}
+               
+            </div>
+  <div class="table-responsive m-t-0" *ngIf=issueMapped>
+        <div id="msg" *ngIf="issues_list.length==0" class="alert alert-warning  m-t-10">  Selected Release has no Issues to Import.
+               
+            </div>
+    <table id="myTable1" class="table table-bordered table-striped m-t-10" *ngIf=issueMapped>
+        <thead>
+            <tr> 
+                <th><input type="checkbox" onClick="toggle(this)" /></th>
+                <th>Key</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Assignee</th>
+                <th>Issue Type</th>
+                <th>Created On</th>
+                <th>Created By</th>
+            </tr>
+        </thead>
+        <tbody>
+             
+                    <tr *ngFor="let item of issues_list">
+
+                            <td><input type="checkbox" name="foo" value="{{item.issueid}}"></td>
+                            
+                            <td>{{item.issueKey}}</td>
+                            <td>{{item.issueName}}</td>
+                            <td>{{item.issueTypeDescription}}</td>
+                            <td>{{item.issueAssigneeName}}</td>
+                            <td>{{item.issueTypeName}}</td>
+                            <td>{{item.issueCreatedon | date}}</td>
+                            <td>{{item.issueCreaterName}}</td>
+                        </tr>
+             
+             
+        </tbody>
+    </table>
+</div>
+</div>
+  </div>
+  <!-- <div class="col-md-12 box epics">
+     
+       
+<div class="col-md-3 pull-left"><button type="submit" class="btn btn-info">Import</button></div>
+<div class="row col-md-12">
+  <div class="table-responsive m-t-0">
+    <table id="myTable2" class="table table-bordered table-striped m-t-10">
+        <thead>
+            <tr> 
+                <th><input type="checkbox" onClick="toggle(this)" /></th>
+                <th>Key</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Assignee</th>
+                <th>Issue Type</th>
+                <th>Created On</th>
+                <th>Created By</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+</div>
+</div>
+  </div> -->
+
+
+  
+</div></div></div>

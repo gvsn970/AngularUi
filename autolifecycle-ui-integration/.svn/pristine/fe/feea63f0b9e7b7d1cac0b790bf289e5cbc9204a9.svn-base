@@ -1,0 +1,177 @@
+<div class="row page-titles">
+    <div class="col-lg-12">
+    <div class="col-md-7 align-self-center" style="float: left;">
+        <h3 class="text-themecolor">Product Overview</h3>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/Portfolio">Portfolio</a></li>
+            <li class="breadcrumb-item"><a routerLink="/Portfolio">Products</a></li>
+            <li class="breadcrumb-item active">Product Overview</li>
+        </ol>
+    </div>
+    <div class="col-md-5 align-self-center text-right" style="float: right;">
+            <div class="input-group-prepend col-md-3" style="float: right;">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+                    <div class="dropdown-menu">
+                            <a class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+                        </div>
+                    </div>
+                
+                    <div class="form-group col-md-6" style="float: right;">
+                            <button type="button" class="btn btn-warning" style="text-transform: uppercase;" routerLink="/Sync Products">Sync</button>
+                  </div>
+    
+    </div>
+</div>
+</div>
+<div *ngIf=no_products >
+            
+    <div   class="card p-30" > 
+         <h2 style="text-align: center;">No Products available here<br><a style="color: #24d2b5;" routerLink="/Create Product" > Create a Product</a> </h2>
+
+        </div>
+
+</div>
+<div *ngIf=!no_products class="col-lg-12">
+  <div class="card" style="background-color: #e8ebf3;">
+        <div id="msg" *ngIf=delete_message class="alert alert-danger  m-t-10">  {{message}}
+                <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button> -->
+                </div>
+      <div class="card-body">
+          <h4>Product Overview</h4> 
+          <hr class="m-t-0 m-b-0">
+
+        <div class="vtabs customvtab">
+          <ul class="nav nav-tabs tabs-vertical" role="tablist">
+          <li class="nav-item " *ngFor="let item of productList"  (click)=getProductDetails(item.product_id)> <a [ngClass]="{'active': selectedItem == item.product_id}" class="nav-link {{item.product_name}} " id="ff" data-toggle="tab" href="{{item.product_name}}" role="tab"><span class="hidden-sm-up"><i class="ti-home"></i></span> <span class="hidden-xs-down">{{item.product_name}}</span> </a> </li>
+           </ul>
+          <!-- Tab panes -->
+          <div class="tab-content" style="background-color: #ffffff;padding-top: 40px; width: 87%;">
+          
+          <div class="tab-pane active" *ngFor="let item of product" id="{{item.product_name}}" role="tabpanel">
+          <form class="form-horizontal" role="form" #updateProduct="ngForm" (ngSubmit) ="onSave(updateProduct.value)">
+          <div class="form-body">
+          
+           
+              <div class="form-group m-t-10 row">
+                  <label for="example-text-input" class="col-3 col-form-label text-right">Product Line Name:</label>
+                  <div class="col-9">
+                      <select   name="PLid" id="select" required class="form-control" ngModel  disabled>
+                           
+                          <option value={{item.product_line_id}}  selected>{{item.product_line_name}}</option>
+                           
+                          </select>
+                  </div>
+          </div>
+          <div class="form-group m-t-10 row">
+                  <label for="example-text-input" class="col-3 col-form-label text-right">Product Name:</label>
+                  <div class="col-9">
+                      <input class="form-control" id="example-text-input" name="Pname" type="text" value={{item.product_name}} disabled  *ngIf=isDisabled  ngModel={{item.product_name}}>
+                      <input class="form-control" id="example"  data-validation="length alphanumeric" data-validation-allowing=" " data-validation-length="min4"   data-validation-error-msg-container="#name-error" name="Pname" type="text" value={{item.product_name}} *ngIf=!isDisabled ngModel={{item.product_name}}  > 
+                      <label  id="name-error" class="col-9 col-form-label text-left" style="color: brown;"> </label>   
+                  </div>
+          </div>
+          <div class="form-group m-t-10 row">
+                      <label for="example-text-input" class="col-3 col-form-label text-right">Description:</label>
+                      <div class="col-9">
+                              <textarea name="textarea" id="textarea" name="Pdesc" class="form-control" value={{item.product_desc}} disabled *ngIf=isDisabled ngModel={{item.product_desc}}>   </textarea>
+                              <textarea name="textarea" id="textarea" name="Pdesc" class="form-control" value={{item.product_desc}} data-validation="required" *ngIf=!isDisabled ngModel={{item.product_desc}}>   </textarea>
+                            </div>
+          </div>
+          <div class="form-group m-t-10 row">
+            <label for="example-text-input" class="col-3 col-form-label text-right">Attachments:</label>
+            <div class="col-9">
+                <table>
+                     
+                    <div  >
+                    
+                            
+                                    <tr *ngFor="let file of item.files" >
+                                         <div id={{file.attachmentId}} class={{file.attachmentId}}> 
+                                            <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+
+                                            <span class="badge badge-primary"> 
+                                        <td ><a style="color: #ffffff" href="{{serviceUrl}}/fileViewer/download?file=product&fileId={{file.attachmentId}}" >{{file.fileName}}</a></td>
+                                        <td *ngIf=!isDisabled>  <i style="color: #ebb064" (click)=onAttachmentDelete(file.attachmentId) class="fa fa-times "></i>  </td>
+                                                </span>
+                                    </div>
+                                    </tr>
+                             
+                            
+                             
+                     
+                </div>   
+                </table>
+                
+                <div *ngIf=!isDisabled class="form-group m-t-10 row">
+                    <div class="col-9">
+                        <!-- <div id="msg" *ngIf=success_message class="alert alert-success">  {{status_message}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                                </div>
+                
+                                <div id="msg" *ngIf=fail_message class="alert alert-danger  m-t-10">  {{status_message}}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                                    </div> -->
+                        <input type="file" (change)="selectFile($event)" multiple name="img[]" class="file"> 
+                                <div class="input-group col-xs-12">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+                                <input type="text"   class="form-control input-lg" disabled placeholder="Upload Files">
+                                <span class="input-group-btn">
+                                <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                                </span>
+                                </div>
+                </div>
+                    
+                  </div>
+            </div>
+          </div>
+          <div class="form-group m-t-10 row">
+          <div class="col-3"></div>
+          <div class="col-9">
+          <button type="button" class="btn btn-info" *ngIf=isDisabled  (click)=onSubmit()>Edit</button>
+          <button type="button" class="btn btn-info" *ngIf=isDisabled data-toggle="modal" data-target="#exampleModal" >Delete</button>
+          <button type="submit" class="btn btn-info" *ngIf=!isDisabled   >Save</button>
+          <button type="button" class="btn btn-info" *ngIf=!isDisabled   (click)=onCancel()>Cancel</button>
+          </div> 
+          </div>
+ 
+          
+          </div>
+
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            
+            <h2 class="text-center m-t-30" style="font-weight: 600; font-size: 30px;">Are you sure?</h2>
+            <div class="text-center m-b-30"> You want delete {{item.product_name}}</div>
+            
+            <div class="text-center m-b-30">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" (click)=onDelete()  data-dismiss="modal" class="btn btn-danger">Yes, delete it!</button>
+            </div>
+            </div>
+            </div>
+           </div>
+          </form>
+         </div>
+
+
+           
+          
+          </div>
+         </div>
+
+
+
+      </div>
+  </div>
+
+
+  
+       
+
+
+</div>

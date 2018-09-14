@@ -1,0 +1,454 @@
+<div class="row page-titles">
+    <div class="col-lg-12">
+    <div class="col-md-5 align-self-center" style="float: left;">
+        <h3 class="text-themecolor">Overview</h3>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/Create Release">Releases</a></li>
+            <li class="breadcrumb-item active">Overview</li>
+        </ol>
+        <h4><a style="color:#04b381;" routerLink="/List Of Releases"><i class="fa fa-arrow-left"></i> List Of Releases</a></h4>
+    </div>
+  
+    <div class="col-md-7 align-self-center text-right" style="float: right;">
+      <div class="input-group-prepend" style="float: right;">
+      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+      <div class="dropdown-menu">
+              <a class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+              <div role="separator" class="dropdown-divider"></div>
+              <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+              <div role="separator" class="dropdown-divider"></div>
+              <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+          </div>
+      </div>
+
+      <!-- <div class="form-group col-md-6" style="float: right;">
+        <select name="select" id="select" required class="form-control">
+        <option value="0">Product One</option>
+        <option value="1">Product Two</option>
+        </select>
+</div> -->
+  </div>
+  </div>
+  </div>
+    <div id="msg"> 
+    <div  *ngIf=success_message class="alert alert-success">  {{status_message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+            </div>
+
+            <div  *ngIf=fail_message class="alert alert-danger">  {{status_message}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                </div>
+
+    </div>
+            
+  <form #updateRelease="ngForm" (ngSubmit) ="onSave(updateRelease.value)"> 
+
+
+  <div *ngFor="let item of release" class="row p-l-10 p-r-10">
+  
+    
+    <div class="col-lg-4 col-md-12">
+      <div class="card">
+          <div class="card-body">
+              <div class="d-flex p-b-10 no-block" style="border-bottom: 1px solid rgba(120, 130, 140, 0.13);">
+                  <h5 class="card-title m-b-0 align-self-center">{{item.releaseName}}</h5>
+                  <div class="ml-auto">
+                    <button type="submit" class="btn btn-info" *ngIf="Edit">Save</button>
+                    
+                </div>
+               
+              </div>
+             
+                  <div class="col-md-12">
+                     <div class="form-group m-t-10 m-b-10 row">
+                          <label class="col-form-label text-right">Release Date</label>
+                          <input data-validation="required" data-validation-error-msg-container="#select-error1" type="date" name="Idate" class="form-control" title="datetimepicker" value={{item.releaseDateInternal}} style="width: 100%;" *ngIf="Edit" ngModel={{item.releaseDateInternal}}/>
+                          <label  id="select-error1" class="col-9 col-form-label text-left" style="color: brown;"> </label>
+                          <input  type="date" name="Idate" class="form-control" title="datetimepicker" value={{item.releaseDateInternal}} style="width: 100%;"*ngIf="!Edit" disabled ngModel={{item.releaseDateInternal}}/>
+                       </div>
+                      <div class="form-group m-t-10 m-b-10 row">
+                          <label for="example-text-input" class="col-form-label text-right">Description:</label>
+                          <textarea name="Rdesc" id="textarea" class="form-control" value={{item.releaseDescription}} placeholder="" *ngIf="Edit" ngModel={{item.releaseDescription}}></textarea>
+                          <textarea name="Rdesc" id="textarea" class="form-control" value={{item.releaseDescription}} placeholder="" *ngIf="!Edit" disabled ngModel={{item.releaseDescription}}></textarea>
+                      </div>
+                      <div class="form-group m-t-10 m-b-10 row">
+                              <label for="example-text-input" class="col-form-label text-right">Attachments:</label>
+
+                             
+                              <div class="col-9">
+
+                                    <table>
+                                        <tr *ngFor="let file of item.files" >
+                                            <div id={{file.attachmentId}} class={{file.attachmentId}}> 
+                                               <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+   
+                                               <span class="badge badge-primary"> 
+                                           <td ><a style="color: #ffffff" href="{{serviceUrl}}/fileViewer/download?file=product&fileId={{file.attachmentId}}" >{{file.fileName}}</a></td>
+                                           <td *ngIf="Edit">  <i style="color: #ebb064" (click)=onAttachmentDelete(file.attachmentId) class="fa fa-times "></i>  </td>
+                                                   </span>
+                                       </div>
+                                       </tr>
+                                
+                               
+                                        </table>
+                              </div>
+                              <div  *ngIf="Edit"  class="col-9">
+                                    
+                                <input type="file" (change)="selectFile($event)" multiple name="img[]" class="file"> 
+                                <div class="input-group col-xs-12">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+                                <input type="text"   class="form-control input-lg" disabled placeholder="Upload Files">
+                                <span class="input-group-btn">
+                                <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                                </span>
+                                </div>
+                            </div>
+                          </div>
+              </div>
+          </div>
+      </div>
+      <input    name="R_id"   style="visibility:hidden; height:0px !important;" value={{item.releaseId}}   *ngIf="Edit" ngModel={{item.releaseId}}/>
+      <input    name="P_id"   style="visibility:hidden; height:0px !important;" value={{item.fkProductId}}   *ngIf="Edit" ngModel={{item.fkProductId}}/>
+  </div>
+ 
+  
+  <div class="col-lg-4 col-md-12">
+      <div class="card">
+          <div class="card-body">
+              <div class="d-flex p-b-10 no-block" style="border-bottom: 0px solid rgba(120, 130, 140, 0.13);">
+                  <h5 class="card-title m-b-0 align-self-center">Status</h5>
+                   
+              </div>
+                  <div class="col-md-12">
+                     <div class="form-group m-t-10 m-b-10 row">
+                          <label class="col-form-label text-right">Owner</label>
+                          <select name="select" id="select" required class="form-control" *ngIf="Edit"  >
+                             
+                            <option value="1">Auto User</option>
+                                 
+                            </select>
+                            <select name="select" id="select" required class="form-control" *ngIf="!Edit" disabled  >
+                                <option value="1">Auto User</option>
+                                   
+                                  </select>
+                      </div>
+                      <div class="form-group m-t-10 m-b-10 row">
+                          <label for="example-text-input" class="col-form-label text-right">Select Status</label>
+                          <select name="Rstatus" id="select" required class="form-control" *ngIf="Edit" ngModel={{item.fkStatusId}}>
+                          <option value={{item.fkStatusId}}>{{item.status}}</option>
+                          <option value="0">To be Released</option>
+                                <option value="2">Shipped</option>
+                          </select>
+                          <select name="Rstatus" id="select" required class="form-control" *ngIf="!Edit" disabled ngModel={{item.fkStatusId}}>
+                                <option value={{item.fkStatusId}}>{{item.status}}</option>
+                                <option value="0">To be Released</option>
+                                <option value="2">Shipped</option>
+                                 
+                                </select>
+                       </div>
+                       <div class="form-group m-t-10 m-b-10 row">
+                        <button type="submit" class="btn btn-info m-r-10">Approved</button>
+                        <button type="submit" class="btn btn-success">Development Started</button>
+                        </div>
+
+                       
+                      <div class="form-group m-t-10 m-b-10 row">
+                        <label class="col-form-label text-right">Total Features:</label>
+                        <span class="m-t-10 m-l-20"><strong>{{item.totalFeaturesCount}}</strong></span>
+                       </div>
+
+
+                      <div class="form-group m-t-10 m-b-10 row">
+                        <label class="col-form-label text-right">Features Ready To Ship:</label>
+                        <span class="m-t-10 m-l-20"><strong>{{item.readyToShipCount}}</strong></span>
+                       </div>
+
+
+                      <div class="form-group m-t-10 m-b-10 row">
+                        <label class="col-form-label text-right">Days To Release:</label>
+                        <span class="m-t-10 m-l-20"><strong>{{item.daysCount}}</strong></span>
+                       </div>
+  
+                      
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <div class="col-lg-4 col-md-12">
+      <div class="card">
+          <div class="card-body">
+              <div class="d-flex m-b-30 p-b-10 no-block" style="border-bottom: 1px solid rgba(120, 130, 140, 0.13);">
+                  <h5 class="card-title m-b-0 align-self-center">{{item.releaseName}}</h5>
+                  <!-- <div class="ml-auto">
+                      <button type="button" class="btn btn-info">Add Phases</button>
+                  </div> -->
+              </div>
+                  <div class="col-md-12">
+                    <button *ngIf="Edit"  type="button" class="btn btn-warning m-b-20" data-toggle="modal" data-target="#phaseModal">Add Phases</button>
+                    <button *ngIf="Edit"  type="button" class="btn btn-inverse m-b-20" data-toggle="modal" data-target="#milestoneModal">Add Milestone</button>
+                    <div class="modal fade" id="phaseModal" tabindex="-1" role="dialog" aria-labelledby="phaseModalLabel1">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content ">
+                        <form #createReleasePhase="ngForm" (ngSubmit) ="onCreateReleasePhase(createReleasePhase.value)">
+                            <div class="card col-lg-12" style="margin-bottom: 2px; border: 0px solid #e1e2e3;padding: 0px;">
+                                <div id="msg"> 
+                                    
+                                  
+                                          <div  *ngIf=popup_fail_message class="alert alert-danger">  {{status_message}}
+                                               
+                                              </div>
+                                  
+                                  </div>
+                                    <h5 class="mb-0">
+                             
+                                        <div class="modal-header" style="background-color: #ff9041;border-top-left-radius:0px;border-top-right-radius:0px;">
+                                            <h4 class="modal-title" style="line-height: 25px; color: #fff;">Add Phase<br>
+                                            
+                                            </h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            </div>
+
+                               
+       
+                          </h5>
+                                 
+                                 
+                                  <div class="card-body">
+                                      <div class="form-group m-b-10 row">
+                                              <label class="col-4 col-form-label text-right">Name</label>
+                                              <div class="col-8">
+                                                <input name="release_phase_name" class="form-control" id="example-text-input" type="text" ngModel>
+                                            </div>
+                                      </div>
+                                     
+                                      <div class="form-group m-t-10 m-b-10 row">
+                                              <label  class="col-4 col-form-label text-right">Start Date</label>
+                                              <div class="col-8">
+                                                <input name="start_date" id="datetimepicker3" type="date" class="form-control" title="datetimepicker" style="width: 100%;" ngModel>
+
+                                              </div>
+                                           </div>
+                                           <div class="form-group m-t-10 m-b-10 row">
+                                                  <label class="col-4 col-form-label text-right">End Date</label>
+                                                  <div class="col-8">
+                                                    <input name="end_date" id="datetimepicker4" type="date" class="form-control" title="datetimepicker" style="width: 100%;" ngModel>
+
+                                                  </div>
+                                               </div>
+                                          <div class="form-group m-t-10 m-b-10 row">
+                                              <label for="example-text-input"class="col-4 col-form-label text-right">Description:</label>
+                                              <div class="col-8">
+                                              <textarea name="description" id="textarea" class="form-control" placeholder="" ngModel></textarea>
+                                            </div>
+                                            </div>
+                                          <div  class="form-group m-t-10 m-b-10 row">
+                                                <label for="example-text-input" class="col-4 col-form-label text-right">Attachments:</label>
+                                                
+                                                
+                                                <div class="col-8">
+                                                <input type="file" (change)="ReleasePhaseFiles($event)" multiple name="img[]" class="file"> 
+                                              <div class="input-group col-xs-12">
+                                              <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+                                              <input type="text"   class="form-control input-lg" placeholder="Upload Files">
+                                              <span class="input-group-btn">
+                                              <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                                              </span>
+                                              </div>
+                                              </div>
+                                          </div>
+                                       
+                                     
+    
+                              </div>
+                              <div class="modal-footer">
+                              <button type="submit" class="btn btn-success">Create</button>
+                              <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                            </div>
+                            </div>
+                        </form>
+
+                         
+                        </div>
+                        </div>
+                       </div>
+                      
+                       <div class="modal fade" id="milestoneModal" tabindex="-1" role="dialog" aria-labelledby="milestoneModalLabel1">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content ">
+                            
+                                <form #createMilestone="ngForm" (ngSubmit) ="onCreateMilestone(createMilestone.value)">
+                                    <div class="card col-lg-12" style="margin-bottom: 2px; border: 0px solid #e1e2e3;padding: 0px;">
+                                        <div id="msg"> 
+                                            
+                                          
+                                                  <div  *ngIf=popup_fail_message class="alert alert-danger">  {{status_message}}
+                                                       
+                                                      </div>
+                                          
+                                          </div>
+                                            <h5 class="mb-0">
+                                     
+                                                <div class="modal-header" style="background-color:#232a37;border-top-left-radius:0px;border-top-right-radius:0px;">
+                                                    <h4 class="modal-title" style="line-height: 25px; color: #fff;">Add Milestone<br>
+                                                    
+                                                    </h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                    </div>
+        
+                                       
+               
+                                  </h5>
+                                         
+                                         
+                                          <div class="card-body">
+                                              <div class="form-group m-b-10 row">
+                                                      <label class="col-4 col-form-label text-right">Name</label>
+                                                      <div class="col-8">
+                                                        <input name="release_phase_name" class="form-control" id="example-text-input" type="text" ngModel>
+                                                    </div>
+                                              </div>
+                                             
+                                               
+                                                   <div class="form-group m-t-10 m-b-10 row">
+                                                          <label class="col-4 col-form-label text-right">End Date</label>
+                                                          <div class="col-8">
+                                                            <input name="end_date" id="datetimepicker4" type="date" class="form-control" title="datetimepicker" style="width: 100%;" ngModel>
+        
+                                                          </div>
+                                                       </div>
+                                                  <div class="form-group m-t-10 m-b-10 row">
+                                                      <label for="example-text-input"class="col-4 col-form-label text-right">Description:</label>
+                                                      <div class="col-8">
+                                                      <textarea name="description" id="textarea" class="form-control" placeholder="" ngModel></textarea>
+                                                    </div>
+                                                    </div>
+                                                  <div  class="form-group m-t-10 m-b-10 row">
+                                                        <label for="example-text-input" class="col-4 col-form-label text-right">Attachments:</label>
+                                                        <div class="col-8">
+                                                        <input type="file" (change)="MilestoneFiles($event)" multiple name="img[]" class="file"> 
+                                                      <div class="input-group col-xs-12">
+                                                      <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+                                                      <input type="text"   class="form-control input-lg" placeholder="Upload Files">
+                                                      <span class="input-group-btn">
+                                                      <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                                                      </span>
+                                                      </div>
+                                                      </div>
+                                                  </div>
+                                               
+                                             
+            
+                                      </div>
+                                      <div class="modal-footer">
+                                      <button type="submit" class="btn btn-success">Create</button>
+                                      <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
+                                </form>
+    
+    
+                             
+                            </div>
+                            </div>
+                           </div>
+
+                      <div id="accordion2" class="accordion" role="tablist" aria-multiselectable="true">
+                            <div *ngFor="let item of release_phases;let i=index;" class="card" style="margin-bottom: 2px; border: 1px solid #e1e2e3;">
+                       <form  name="release_phase_form{{i}}" id="release_phase_form{{i}}" (ngSubmit) ="onUpdateReleasePhase(i)"  >
+                        
+                                
+                            <div class="card-header" role="tab" id="headingOne">
+                                <h5 *ngIf="item.fk_release_phase_type==='Milestone'" class="mb-0">
+                        <a class="text-inverse" data-toggle="collapse" data-parent="#accordion2" href="#{{item.release_phase_name}}" aria-expanded="false" aria-controls="collapseOne">
+                          <i class="mdi mdi-brightness-1 text-inverse"></i>  {{item.release_phase_name}}
+                        </a>
+                      </h5>
+                      <h5 *ngIf="item.fk_release_phase_type==='Phase'" class="mb-0">
+                        <a class="text-inverse" data-toggle="collapse" data-parent="#accordion2" href="#{{item.release_phase_name}}" aria-expanded="false" aria-controls="collapseOne">
+                          <i class="mdi mdi-brightness-1 text-warning"></i>  {{item.release_phase_name}}
+                        </a>
+                      </h5>
+                            </div>
+                           
+                            <div id={{item.release_phase_name}} class="collapse" role="tabpanel" aria-labelledby="headingOne">
+                              <div class="card-body">
+                                  <div class="form-group m-b-10 row">
+                                          <label class="col-form-label text-right">Release Name</label>
+                                           
+                                          <input class="form-control"    id="example-text-input" value={{item.releaseName}} type="text" disabled >
+                                  </div>
+                                  <div class="form-group m-t-10 m-b-10 row">
+                                          <label for="example-text-input" class="col-form-label text-right">Release Type</label>
+                                          
+                                          <input class="form-control" name=phase_type id=phase_type{{i}}  value={{item.fk_release_phase_type}} type="text"   disabled  ngModel={{release_phases[i].fk_release_phase_type}}   >
+                                  </div> 
+                                  <div *ngIf="item.fk_release_phase_type==='Phase'" class="form-group m-t-10 m-b-10 row">
+                                          <label class="col-form-label text-right">Start Date</label>
+                                          <input name="start_date" id=start_date{{i}} type="date" class="form-control" value={{item.startdate}} title="datetimepicker" style="width: 100%;" *ngIf="Edit" ngModel={{item.startdate}}>
+                                          <input name="start_date" id=start_date{{i}} type="date" class="form-control" value={{item.startdate}} title="datetimepicker" style="width: 100%;" *ngIf="!Edit" disabled ngModel={{item.startdate}}>
+                                       </div>
+                                       <div class="form-group m-t-10 m-b-10 row">
+                                              <label class="col-form-label text-right">End Date</label>
+                                              <input id=end_date{{i}} name="end_date" type="date" class="form-control" value={{item.endDate}} title="datetimepicker" style="width: 100%;" *ngIf="!Edit" disabled ngModel={{item.endDate}}>
+                                              <input id=end_date{{i}} name="end_date" type="date" class="form-control" value={{item.endDate}} title="datetimepicker" style="width: 100%;"*ngIf="Edit" ngModel={{item.endDate}}>
+                                            </div>  
+                                            <div class="form-group m-t-10 m-b-10 row">
+                                                <label for="example-text-input" class="col-form-label text-right">Description:</label>
+                                                <textarea name="description" id=description{{i}} value={{item.release_phase_description}} class="form-control" placeholder="" *ngIf="Edit" ngModel={{item.release_phase_description}}></textarea>
+                                                <textarea name="description" id=description{{i}} value={{item.release_phase_description}} class="form-control" placeholder=""*ngIf="!Edit" disabled ={{item.release_phase_description}}></textarea>
+                                            </div>
+                                      <div  class="form-group m-t-10 m-b-10 row">
+                                            <label class="col-form-label text-right">Attachments</label>
+                                            <div class="col-9">
+
+                                                <table>
+                                                    <tr *ngFor="let file of item.files" >
+                                                        <div id={{file.attachmentId}} class={{file.attachmentId}}> 
+                                                           <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+               
+                                                           <span class="badge badge-primary"> 
+                                                       <td ><a style="color: #ffffff" href="{{serviceUrl}}/fileViewer/download?file=releasephase&fileId={{file.attachmentId}}" >{{file.fileName}}</a></td>
+                                                       <td *ngIf="Edit">  <i style="color: #ebb064" (click)=onAttachmentDelete(file.attachmentId) class="fa fa-times "></i>  </td>
+                                                               </span>
+                                                   </div>
+                                                   </tr>
+                                            
+                                           
+                                                    </table>
+                                          </div>
+                                          <div *ngIf="Edit">
+                                            <input type="file" *ngIf="item.fk_release_phase_type==='Phase'" (change)="ReleasePhaseFiles($event)" multiple name="img[]" class="file"  > 
+                                            <input type="file" *ngIf="item.fk_release_phase_type==='Milestone'" (change)="MilestoneFiles($event)" multiple name="img[]" class="file"  > 
+                                            <div class="input-group col-xs-12">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+                                            <input type="text"   class="form-control input-lg" placeholder="Upload Files"  >
+                                            <span class="input-group-btn">
+                                            <button class="browse btn btn-primary input-lg" type="button"   ><i class="glyphicon glyphicon-search"></i> Browse</button>
+                                            </span>
+                                            </div>
+                                        </div>
+                                      </div>
+                                   
+                                  <button type="submit" class="btn btn-success" *ngIf="Edit" >Save</button>
+                                  
+                                  <input class="form-control" name="release_phase_id"  id=release_phase_id{{i}} value={{item.release_phase_id}} type="text" style="visibility: hidden;height: 0px;width: 0px;" ngModel={{item.release_phase_id}}>
+                                  <input class="form-control" name="release_phase_name" id=release_phase_name{{i}} value={{item.release_phase_name}} type="text" style="visibility: hidden;height: 0px;width: 0px;" ngModel={{item.release_phase_name}}>
+                          </div>
+                            </div>
+                        
+                          
+  
+                    </form>
+                </div>
+                      </div>
+  
+  
+              </div>
+          </div>
+      </div>
+  </div>
+  
+
+  </div>
+</form>

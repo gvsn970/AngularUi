@@ -1,0 +1,115 @@
+<script src="../assets/source/datatables/jquery.dataTables.min.js"></script>
+
+<div class="row page-titles">
+  <div class="col-lg-12">
+  <div class="col-md-7 align-self-center" style="float: left;">
+      <h3 class="text-themecolor">List Of Releases</h3>
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/Create Release">Releases</a></li>
+          <li class="breadcrumb-item active">List Of Releases</li>
+      </ol>
+  </div>
+
+
+  
+  <div class="col-md-5 align-self-center text-right" style="float: right;">
+        <div class="input-group-prepend col-md-3" style="float: right;">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+                <div class="dropdown-menu">
+                        <a class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+                    </div>
+                </div>
+            
+                <div class="form-group col-md-6" style="float: right;">
+                        <button type="button" class="btn btn-warning" style="text-transform: uppercase;" routerLink="/Sync Releases">Sync</button>
+              </div>
+
+    <!-- <div class="input-group-prepend" style="float: right;">
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+    <div class="dropdown-menu">
+            <a  class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+        </div>
+    </div> -->
+</div>
+
+
+</div>
+</div>
+
+
+<div *ngIf=no_release >
+            
+        <div   class="card p-30" > 
+             <h2 style="text-align: center;">No Release available here<br><a style="color: #24d2b5;" routerLink="/Create Release" > Create a Release</a> </h2>
+    
+            </div>
+    
+    </div>
+<div *ngIf=!no_release class="col-lg-12">
+<div class="card">
+    <div class="card-body">
+      
+       
+      <div class="table-responsive m-t-0">
+        <table id="myTable" class="table table-bordered table-striped m-t-10">
+            <thead>
+                <tr> 
+                    <th>Release Name</th>
+                    <th>Description</th>
+                    <th>Product</th>
+                    <th>Release Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of release">
+                     
+                    <td>{{item.releaseName}}</td>
+                    <td class="col-md-4">{{item.releaseDescription}}</td>
+                    <td>{{item.productName}}</td>
+                    <td> {{(item.releaseDateInternal == "null") ? "InActive" :  item.releaseDateInternal }}</td>
+                     
+                    <td id={{item.releaseId}}>
+                        
+                        <a *ngIf="item.fkStatusId!=4" (click)=onShipped(item); ><img src="../assets/images/action/shipped.png"/></a> 
+                        <a *ngIf="item.fkStatusId!=4" routerLink="/Overview/{{item.releaseId}}"><img src="../assets/images/action/view.png"/></a> 
+                        <a *ngIf="item.fkStatusId!=4" (click)=onRelease(item.releaseId) data-toggle="modal" data-target="#exampleModal" ><img src="../assets/images/action/delete.png"/></a> 
+                        <a *ngIf="item.fkStatusId!=4" routerLink="/Overview/{{item.releaseId}}&&edit:true"><img src="../assets/images/action/edit.png"/></a> 
+                        <a *ngIf="item.fkStatusId==4" ><img src="../assets/images/action/shipped-color.png"/></a> 
+                        
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                            
+                            <h2 class="text-center m-t-30" style="font-weight: 600; font-size: 30px;">Are you sure?</h2>
+                            <div class="text-center m-b-30"> You want delete this release</div>
+                            
+                            <div class="text-center m-b-30">
+                            <button type="button" id="modal_close"class="btn btn-default" data-dismiss="modal">Cancel</button>
+                           
+                            <button type="button"  (click)=onDelete()  class="btn btn-danger">Yes, delete it!</button>
+                          
+                            </div>
+                            </div>
+                            </div>
+                           </div>
+                    </td>
+               
+                </tr>
+            </tbody>
+        </table>
+    </div> 
+                
+        
+        
+</div>
+</div>
+</div>

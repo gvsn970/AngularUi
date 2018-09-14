@@ -1,0 +1,15 @@
+.backlogs{
+    display: none;
+}
+.issues{
+    display: none;
+}
+.epics{
+    display: none;
+}
+table.dataTable thead .sorting_asc::after {
+    visibility: hidden;
+}
+table.dataTable thead .sorting_desc::after {
+    visibility: hidden;
+}

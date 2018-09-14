@@ -1,0 +1,34 @@
+<aside class="left-sidebar">
+  <!-- Sidebar scroll-->
+  <div class="scroll-sidebar">
+      <!-- Sidebar navigation-->
+      <nav class="sidebar-nav">
+            <ul id="sidebarnav">
+              <li> <a routerLink="/Portfolio" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="has-arrow waves-effect waves-dark" aria-expanded="false"><img src="../assets/images/sidebar/portfolio.png"/> <span class="hide-menu">Portfolio</span></a></li>
+              <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><img src="../assets/images/sidebar/releases.png"/> <span class="hide-menu">Releases</span></a>
+                <ul aria-expanded="false" class="collapse">
+                    <li><a routerLink="/Create Release" routerLinkActive="active">Create Release </a></li>
+                    <li><a routerLink="/List Of Releases" routerLinkActive="active">List Of Releases</a></li>
+                </ul>
+              </li>
+              <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><img src="../assets/images/sidebar/features.png"/> <span class="hide-menu">Features</span></a>
+                <ul aria-expanded="false" class="collapse">
+                    <li><a routerLink="/Create Feature" routerLinkActive="active">Create Feature </a></li>
+                    <li><a routerLink="/Onboard Features" routerLinkActive="active">Onboard Features</a></li>
+                    <li><a routerLink="/List Of Features" routerLinkActive="active">List Of Features</a></li>
+                </ul>
+              </li>
+              <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><img src="../assets/images/sidebar/configure.png"/> <span class="hide-menu">Configure</span></a>
+                <ul aria-expanded="false" class="collapse">
+                    <li><a routerLink="/Jira" routerLinkActive="active">Jira </a></li>
+                    <li><a routerLink="/Bugzilla" routerLinkActive="active">Bugzilla</a></li>
+                </ul>
+              </li> 
+              <!-- <li><a routerLink="/Profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"> Profile</a></li>
+              <li><a routerLink="/Create Release" routerLinkActive="active"> Create Release</a></li> -->
+            </ul>
+      </nav>
+      <!-- End Sidebar navigation -->
+  </div>
+  <!-- End Sidebar scroll-->
+</aside>

@@ -1,0 +1,805 @@
+<div class="row page-titles">
+    <div class="col-lg-12">
+    <div class="col-md-7 align-self-center" style="float: left;">
+        <h3 class="text-themecolor">Onboard Features</h3>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/Create Feature">Features</a></li>
+            <li class="breadcrumb-item active">Onboard Features</li>
+        </ol>
+  </div>
+  
+    <div class="col-md-5 align-self-center text-right m-t-10" style="float: right;">
+  
+       <div class="input-group-prepend col-md-3" style="float: right;">
+      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+      <div class="dropdown-menu">
+              <a class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+              <div role="separator" class="dropdown-divider"></div>
+              <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+              <div role="separator" class="dropdown-divider"></div>
+              <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+          </div>
+      </div>
+
+    <div class="form-group col-md-4 p-r-0 p-l-0" style="float: right;">
+        <select name="select" (change)="productSelected($event)" id="select" required class="form-control" ngModel={{product_id}} #select>
+                 
+            <option *ngFor="let item of products_list" value= {{item.product_id}}>{{item.product_name}}--{{item.product_line_name}}</option>
+          </select>
+    </div>
+    <div class="form-group col-md-5" style="float: right;">
+        <select class="form-control">
+        <option disabled>Import Features From</option>
+        <option routerLink="/Import Features">Jira</option>
+        <option>Bugzilla</option>
+        </select>
+    </div>
+
+  </div>
+  </div>
+  </div>
+  
+  
+ 
+
+  <div class="col-lg-9 pull-left"><div class="card"><div class="card-body">
+
+
+        <div class="row">
+                <div class="col-md-4 pull-left">
+                        <div class="form-group">
+                            <select name="select" (change)="releaseSelected($event)" id="select" required class="form-control" #select>
+                 
+                                <option *ngFor="let item of release_list" value= {{item.releaseId}}>{{item.releasename}}</option>
+                              </select>
+                        </div>
+                </div>
+                <div class="col-md-4 pull-left">
+                        <div class="form-group">
+                                <select class="form-control">
+                                <option value="0">Assigned</option>
+                                <option value="1">Un Assigned</option>
+                                </select>
+                        </div>
+                </div>
+                <div class="col-md-4 pull-left">
+                        <div class="form-group">
+                                <input type="search" placeholder="Search" class="form-control" >
+                        </div>
+                </div>
+        </div>
+
+
+        <div *ngIf=no_feature class="col-lg-12"><div class="card"><div class="card-body">
+
+            <div   class="card p-30" > 
+                <h2 style="text-align: center;">No Features available for this Release<br><a style="color: #24d2b5;" routerLink="/Create Feature" > Create a Feature</a> </h2>
+        
+               </div>
+        
+            </div>
+            </div>
+            
+        </div>
+        
+        <div *ngIf=no_release class="col-lg-12"><div class="card"><div class="card-body">
+        
+            <div   class="card p-30" > 
+                <h2 style="text-align: center;">No Releases available for this Product<br><a style="color: #24d2b5;" routerLink="/Create Release" > Create a Release</a> </h2>
+        
+               </div>
+        
+            </div>
+            </div>
+            
+        </div>
+
+        <div *ngIf=!no_feature&&!no_release >
+                <ul id="sortable1"   class="connectedSortable">
+                    <li (click)=onDrop($event) *ngFor="let item of feature_list" id={{item.feature_id}}   class="ui-state-default">
+                        
+                        <div *ngIf="item.status==='Under Consideration'" id={{item.feature_id}}  class="card m-b-10" style="background-color: #c1bdde;">
+                                <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #5a54a4;">
+                                    <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                    <span class="pull-right">{{item.story_points}}</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body p-10" style=" color: #000;">
+                                    <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                    <p class="card-text m-b-0">{{item.status}}
+                                        <span class="pull-right">
+                                            <img src="../assets/images/action/f-assigned.png"/> 
+                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                        </span>
+                                    </p>
+                                 </div>
+                            </div>
+                            <div *ngIf="item.status==='In Design'" id={{item.feature_id}}  class="card m-b-10" style="background-color: #c8e1f5;">
+                                    <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #5a54a4;">
+                                        <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                        <span class="pull-right">{{item.story_points}}</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-10" style=" color: #000;">
+                                        <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                        <p class="card-text m-b-0">{{item.status}}
+                                            <span class="pull-right">
+                                                <img src="../assets/images/action/f-assigned.png"/> 
+                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                            </span>
+                                        </p>
+                                     </div>
+                                </div>
+                                <div *ngIf="item.status==='Ready to Develop'" id={{item.feature_id}}  class="card m-b-10" style="background-color:#ffe2b8;">
+                                        <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #fbaa1e;">
+                                            <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                            <span class="pull-right">{{item.story_points}}</span>
+                                            </h5>
+                                        </div>
+                                        <div class="card-body p-10" style=" color: #000;">
+                                            <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                            <p class="card-text m-b-0">{{item.status}}
+                                                <span class="pull-right">
+                                                    <img src="../assets/images/action/f-assigned.png"/> 
+                                                    <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                </span>
+                                            </p>
+                                         </div>
+                                    </div>
+                                    <div *ngIf="item.status==='In Development'" id={{item.feature_id}}  class="card m-b-10" style="background-color: #c0ac99;">
+                                            <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #603813;">
+                                                <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                <span class="pull-right">{{item.story_points}}</span>
+                                                </h5>
+                                            </div>
+                                            <div class="card-body p-10" style=" color: #000;">
+                                                <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                <p class="card-text m-b-0">{{item.status}}
+                                                    <span class="pull-right">
+                                                        <img src="../assets/images/action/f-assigned.png"/> 
+                                                        <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                    </span>
+                                                </p>
+                                             </div>
+                                        </div>
+                                        <div *ngIf="item.status==='Ready to Ship'" id={{item.feature_id}}  class="card m-b-10" style="background-color:  #f7c6dc;">
+                                                <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #e93295;">
+                                                    <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                    <span class="pull-right">{{item.story_points}}</span>
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body p-10" style=" color: #000;">
+                                                    <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                    <p class="card-text m-b-0">{{item.status}}
+                                                        <span class="pull-right">
+                                                            <img src="../assets/images/action/f-assigned.png"/> 
+                                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                        </span>
+                                                    </p>
+                                                 </div>
+                                            </div>
+                                            <div *ngIf="item.status==='Shipped'" id={{item.feature_id}}  class="card m-b-10" style="background-color: #c3e4de;">
+                                                    <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color:  #0eb3a2;">
+                                                        <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                        <span class="pull-right">{{item.story_points}}</span>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="card-body p-10" style=" color: #000;">
+                                                        <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                        <p class="card-text m-b-0">{{item.status}}
+                                                            <span class="pull-right">
+                                                                <img src="../assets/images/action/f-assigned.png"/> 
+                                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                            </span>
+                                                        </p>
+                                                     </div>
+                                                </div>
+                                                <div *ngIf="item.status==='Will not Implement'" id={{item.feature_id}}  class="card m-b-10" style="background-color: #c8c9cb;">
+                                                        <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #58585a;">
+                                                            <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                            <span class="pull-right">{{item.story_points}}</span>
+                                                            </h5>
+                                                        </div>
+                                                        <div class="card-body p-10" style=" color: #000;">
+                                                            <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                            <p class="card-text m-b-0">{{item.status}}
+                                                                <span class="pull-right">
+                                                                    <img src="../assets/images/action/f-assigned.png"/> 
+                                                                    <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                                </span>
+                                                            </p>
+                                                         </div>
+                                                    </div>
+             
+                    </li>
+                    <!-- <li class="dd-item" data-id="2">
+                        <div class="card m-b-10" style="background-color: #c8e1f5;">
+                                <div class="card-header dd-handle m-t-0" style="background-color: #43ace1;">
+                                    <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                    <span class="pull-right">10</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body p-10" style=" color: #000;">
+                                    <h6 class="card-title text-inverse m-b-0">Feature Two</h6>
+                                    <p class="card-text">In Design
+                                        <span class="pull-right">
+                                            <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/> 
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                    </li>
+                    <li class="dd-item" data-id="3">
+                        <div class="card m-b-10" style="background-color: #ffe2b8;">
+                                <div class="card-header dd-handle m-t-0" style="background-color: #fbaa1e;">
+                                    <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                    <span class="pull-right">10</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body p-10" style=" color: #000;">
+                                    <h6 class="card-title text-inverse m-b-0">Feature Three</h6>
+                                    <p class="card-text">Ready To Development
+                                        <span class="pull-right">
+                                            <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/> 
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                    </li>
+                    <li class="dd-item" data-id="4">
+                        <div class="card m-b-10" style="background-color: #c0ac99;">
+                                <div class="card-header dd-handle m-t-0" style="background-color: #603813;">
+                                    <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                    <span class="pull-right">10</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body p-10" style=" color: #000;">
+                                    <h6 class="card-title text-inverse m-b-0">Feature Four</h6>
+                                    <p class="card-text">In Development
+                                        <span class="pull-right">
+                                            <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/> 
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                    </li>
+                    <li class="dd-item" data-id="5">
+                        <div class="card m-b-10" style="background-color: #f7c6dc;">
+                                <div class="card-header dd-handle m-t-0" style="background-color: #e93295;">
+                                    <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                    <span class="pull-right">10</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body p-10" style=" color: #000;">
+                                    <h6 class="card-title text-inverse m-b-0">Feature Five</h6>
+                                    <p class="card-text">Ready To Ship
+                                        <span class="pull-right">
+                                            <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/> 
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                    </li>
+                    <li class="dd-item" data-id="6">
+                        <div class="card m-b-10" style="background-color: #c3e4de;">
+                                <div class="card-header dd-handle m-t-0" style="background-color: #0eb3a2;">
+                                    <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                    <span class="pull-right">10</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body p-10" style=" color: #000;">
+                                    <h6 class="card-title text-inverse m-b-0">Feature Six</h6>
+                                    <p class="card-text">Shipped
+                                        <span class="pull-right">
+                                            <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/> 
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                    </li>
+                    <li class="dd-item" data-id="7">
+                        <div class="card m-b-10" style="background-color: #c8c9cb;">
+                                <div class="card-header dd-handle m-t-0" style="background-color: #58585a;">
+                                    <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                    <span class="pull-right">10</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body p-10" style=" color: #000;">
+                                    <h6 class="card-title text-inverse m-b-0">Feature Seven</h6>
+                                    <p class="card-text">Will Not Implemented
+                                        <span class="pull-right">
+                                            <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                    </li> -->
+                </ul>
+
+
+                
+            </div>
+
+<!-- 
+            <div *ngIf=!no_feature&&!no_release class="myadmin-dd dd" id="nestable">
+                    <ol class="dd-list">
+                        <li *ngFor="let item of feature_list" class="dd-item" data-id="1">
+                            
+                            <div *ngIf="item.status==='Under Consideration'" class="card m-b-10" style="background-color: #c1bdde;">
+                                    <div class="card-header dd-handle m-t-0" style="background-color: #5a54a4;">
+                                        <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                        <span class="pull-right">{{item.story_points}}</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-10" style=" color: #000;">
+                                        <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                        <p class="card-text m-b-0">{{item.status}}
+                                            <span class="pull-right">
+                                                <img src="../assets/images/action/f-assigned.png"/> 
+                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                            </span>
+                                        </p>
+                                     </div>
+                                </div>
+                                <div *ngIf="item.status==='In Design'" class="card m-b-10" style="background-color: #c8e1f5;">
+                                        <div class="card-header dd-handle m-t-0" style="background-color: #5a54a4;">
+                                            <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                            <span class="pull-right">{{item.story_points}}</span>
+                                            </h5>
+                                        </div>
+                                        <div class="card-body p-10" style=" color: #000;">
+                                            <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                            <p class="card-text m-b-0">{{item.status}}
+                                                <span class="pull-right">
+                                                    <img src="../assets/images/action/f-assigned.png"/> 
+                                                    <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                </span>
+                                            </p>
+                                         </div>
+                                    </div>
+                                    <div *ngIf="item.status==='Ready to Develop'" class="card m-b-10" style="background-color:#ffe2b8;">
+                                            <div class="card-header dd-handle m-t-0" style="background-color: #fbaa1e;">
+                                                <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                <span class="pull-right">{{item.story_points}}</span>
+                                                </h5>
+                                            </div>
+                                            <div class="card-body p-10" style=" color: #000;">
+                                                <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                <p class="card-text m-b-0">{{item.status}}
+                                                    <span class="pull-right">
+                                                        <img src="../assets/images/action/f-assigned.png"/> 
+                                                        <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                    </span>
+                                                </p>
+                                             </div>
+                                        </div>
+                                        <div *ngIf="item.status==='In Development'" class="card m-b-10" style="background-color: #c0ac99;">
+                                                <div class="card-header dd-handle m-t-0" style="background-color: #603813;">
+                                                    <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                    <span class="pull-right">{{item.story_points}}</span>
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body p-10" style=" color: #000;">
+                                                    <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                    <p class="card-text m-b-0">{{item.status}}
+                                                        <span class="pull-right">
+                                                            <img src="../assets/images/action/f-assigned.png"/> 
+                                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                        </span>
+                                                    </p>
+                                                 </div>
+                                            </div>
+                                            <div *ngIf="item.status==='Ready to Ship'" class="card m-b-10" style="background-color:  #f7c6dc;">
+                                                    <div class="card-header dd-handle m-t-0" style="background-color: #e93295;">
+                                                        <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                        <span class="pull-right">{{item.story_points}}</span>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="card-body p-10" style=" color: #000;">
+                                                        <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                        <p class="card-text m-b-0">{{item.status}}
+                                                            <span class="pull-right">
+                                                                <img src="../assets/images/action/f-assigned.png"/> 
+                                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                            </span>
+                                                        </p>
+                                                     </div>
+                                                </div>
+                                                <div *ngIf="item.status==='Shipped'" class="card m-b-10" style="background-color: #c3e4de;">
+                                                        <div class="card-header dd-handle m-t-0" style="background-color:  #0eb3a2;">
+                                                            <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                            <span class="pull-right">{{item.story_points}}</span>
+                                                            </h5>
+                                                        </div>
+                                                        <div class="card-body p-10" style=" color: #000;">
+                                                            <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                            <p class="card-text m-b-0">{{item.status}}
+                                                                <span class="pull-right">
+                                                                    <img src="../assets/images/action/f-assigned.png"/> 
+                                                                    <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                                </span>
+                                                            </p>
+                                                         </div>
+                                                    </div>
+                                                    <div *ngIf="item.status==='Will not Implement'" class="card m-b-10" style="background-color: #c8c9cb;">
+                                                            <div class="card-header dd-handle m-t-0" style="background-color: #58585a;">
+                                                                <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                                <span class="pull-right">{{item.story_points}}</span>
+                                                                </h5>
+                                                            </div>
+                                                            <div class="card-body p-10" style=" color: #000;">
+                                                                <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                                <p class="card-text m-b-0">{{item.status}}
+                                                                    <span class="pull-right">
+                                                                        <img src="../assets/images/action/f-assigned.png"/> 
+                                                                        <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                                    </span>
+                                                                </p>
+                                                             </div>
+                                                        </div>
+                 <script src="../assets/source/nestable/jquery.nestable.js"></script>
+                    <script type="text/javascript">
+                    $(function() {
+                          // Nestable
+                          var updateOutput = function(e) {
+                              var list = e.length ? e : $(e.target),
+                                  output = list.data('output');
+                              if (window.JSON) {
+                                  output.val(window.JSON.stringify(list.nestable('serialize'))); //, null, 2));
+                              } else {
+                                  output.val('JSON browser support required for this demo.');
+                              }
+                          };
+                  
+                          $('#nestable').nestable({
+                              group: 1
+                          }).on('change', updateOutput);
+                  
+                          $('#nestable2').nestable({
+                              group: 1
+                          }).on('change', updateOutput);
+                  
+                          updateOutput($('#nestable').data('output', $('#nestable-output')));
+                          updateOutput($('#nestable2').data('output', $('#nestable2-output')));
+                          updateOutput($('#nestable2').data('output', $('#nestable-output')));
+                          updateOutput($('#nestable').data('output', $('#nestable2-output')));
+                  
+                          $('#nestable-menu').on('click', function(e) {
+                              var target = $(e.target),
+                                  action = target.data('action');
+                              if (action === 'expand-all') {
+                                  $('.dd').nestable('expandAll');
+                              }
+                              if (action === 'collapse-all') {
+                                  $('.dd').nestable('collapseAll');
+                              }
+                          });
+                  
+                          $('#nestable-menu').nestable();
+                      });
+                    </script>
+                        </li>
+                        <!-- <li class="dd-item" data-id="2">
+                            <div class="card m-b-10" style="background-color: #c8e1f5;">
+                                    <div class="card-header dd-handle m-t-0" style="background-color: #43ace1;">
+                                        <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                        <span class="pull-right">10</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-10" style=" color: #000;">
+                                        <h6 class="card-title text-inverse m-b-0">Feature Two</h6>
+                                        <p class="card-text">In Design
+                                            <span class="pull-right">
+                                                <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/> 
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                        </li>
+                        <li class="dd-item" data-id="3">
+                            <div class="card m-b-10" style="background-color: #ffe2b8;">
+                                    <div class="card-header dd-handle m-t-0" style="background-color: #fbaa1e;">
+                                        <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                        <span class="pull-right">10</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-10" style=" color: #000;">
+                                        <h6 class="card-title text-inverse m-b-0">Feature Three</h6>
+                                        <p class="card-text">Ready To Development
+                                            <span class="pull-right">
+                                                <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/> 
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                        </li>
+                        <li class="dd-item" data-id="4">
+                            <div class="card m-b-10" style="background-color: #c0ac99;">
+                                    <div class="card-header dd-handle m-t-0" style="background-color: #603813;">
+                                        <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                        <span class="pull-right">10</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-10" style=" color: #000;">
+                                        <h6 class="card-title text-inverse m-b-0">Feature Four</h6>
+                                        <p class="card-text">In Development
+                                            <span class="pull-right">
+                                                <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/> 
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                        </li>
+                        <li class="dd-item" data-id="5">
+                            <div class="card m-b-10" style="background-color: #f7c6dc;">
+                                    <div class="card-header dd-handle m-t-0" style="background-color: #e93295;">
+                                        <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                        <span class="pull-right">10</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-10" style=" color: #000;">
+                                        <h6 class="card-title text-inverse m-b-0">Feature Five</h6>
+                                        <p class="card-text">Ready To Ship
+                                            <span class="pull-right">
+                                                <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/> 
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                        </li>
+                        <li class="dd-item" data-id="6">
+                            <div class="card m-b-10" style="background-color: #c3e4de;">
+                                    <div class="card-header dd-handle m-t-0" style="background-color: #0eb3a2;">
+                                        <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                        <span class="pull-right">10</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-10" style=" color: #000;">
+                                        <h6 class="card-title text-inverse m-b-0">Feature Six</h6>
+                                        <p class="card-text">Shipped
+                                            <span class="pull-right">
+                                                <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/> 
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                        </li>
+                        <li class="dd-item" data-id="7">
+                            <div class="card m-b-10" style="background-color: #c8c9cb;">
+                                    <div class="card-header dd-handle m-t-0" style="background-color: #58585a;">
+                                        <h5 class="m-b-0 text-white" style="line-height: 12px;">RN-1
+                                        <span class="pull-right">10</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-10" style=" color: #000;">
+                                        <h6 class="card-title text-inverse m-b-0">Feature Seven</h6>
+                                        <p class="card-text">Will Not Implemented
+                                            <span class="pull-right">
+                                                <a routerLink="/"><img src="../assets/images/action/f-assigned.png"/></a> 
+                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                        </li>  
+                    </ol>
+    
+    
+                    
+                </div> -->
+  </div></div></div>
+
+  <div class="col-lg-3 pull-right"><div class="card"><div class="card-body" style=" margin: 0 auto;">
+        <div>
+            <h3>Backlogs</h3>
+                <ul id="sortable2"  class="connectedSortable">
+
+
+                        <li (click)=onDrop($event) *ngFor="let item of backlogs_list" id={{item.feature_id}} class="ui-state-highlight">
+                        
+                                <div *ngIf="item.status==='Under Consideration'" id={{item.feature_id}} class="card m-b-10" style="background-color: #c1bdde;">
+                                        <div class="card-header dd-handle m-t-0" id={{item.feature_id}} style="background-color: #5a54a4;">
+                                            <h5 class="m-b-0 text-white" id={{item.feature_id}} style="line-height: 12px">FT-{{item.feature_id}}
+                                            <span class="pull-right">{{item.story_points}}</span>
+                                            </h5>
+                                        </div>
+                                        <div class="card-body p-10" style=" color: #000;">
+                                            <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                            <p class="card-text m-b-0">{{item.status}}
+                                                <span class="pull-right">
+                                                    <img src="../assets/images/action/f-assigned.png"/> 
+                                                    <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                </span>
+                                            </p>
+                                         </div>
+                                    </div>
+                                    <div *ngIf="item.status==='In Design'" id={{item.feature_id}}  class="card m-b-10" style="background-color: #c8e1f5;">
+                                            <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #5a54a4;">
+                                                <h5 class="m-b-0 text-white" id={{item.feature_id}} style="line-height: 12px;">FT-{{item.feature_id}}
+                                                <span class="pull-right">{{item.story_points}}</span>
+                                                </h5>
+                                            </div>
+                                            <div class="card-body p-10" style=" color: #000;">
+                                                <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                <p class="card-text m-b-0">{{item.status}}
+                                                    <span class="pull-right">
+                                                        <img src="../assets/images/action/f-assigned.png"/> 
+                                                        <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                    </span>
+                                                </p>
+                                             </div>
+                                        </div>
+                                        <div *ngIf="item.status==='Ready to Develop'" id={{item.feature_id}}  class="card m-b-10" style="background-color:#ffe2b8;">
+                                                <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #fbaa1e;">
+                                                    <h5 class="m-b-0 text-white" id={{item.feature_id}} style="line-height: 12px;">FT-{{item.feature_id}}
+                                                    <span class="pull-right">{{item.story_points}}</span>
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body p-10" style=" color: #000;">
+                                                    <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                    <p class="card-text m-b-0">{{item.status}}
+                                                        <span class="pull-right">
+                                                            <img src="../assets/images/action/f-assigned.png"/> 
+                                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                        </span>
+                                                    </p>
+                                                 </div>
+                                            </div>
+                                            <div *ngIf="item.status==='In Development'" id={{item.feature_id}}  class="card m-b-10" style="background-color: #c0ac99;">
+                                                    <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #603813;">
+                                                        <h5 class="m-b-0 text-white" id={{item.feature_id}} style="line-height: 12px;">FT-{{item.feature_id}}
+                                                        <span class="pull-right">{{item.story_points}}</span>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="card-body p-10" style=" color: #000;">
+                                                        <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                        <p class="card-text m-b-0">{{item.status}}
+                                                            <span class="pull-right">
+                                                                <img src="../assets/images/action/f-assigned.png"/> 
+                                                                <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                            </span>
+                                                        </p>
+                                                     </div>
+                                                </div>
+                                                <div *ngIf="item.status==='Ready to Ship'" id={{item.feature_id}}  class="card m-b-10" style="background-color:  #f7c6dc;">
+                                                        <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #e93295;">
+                                                            <h5 class="m-b-0 text-white" id={{item.feature_id}} style="line-height: 12px;">FT-{{item.feature_id}}
+                                                            <span class="pull-right">{{item.story_points}}</span>
+                                                            </h5>
+                                                        </div>
+                                                        <div class="card-body p-10" style=" color: #000;">
+                                                            <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                            <p class="card-text m-b-0">{{item.status}}
+                                                                <span class="pull-right">
+                                                                    <img src="../assets/images/action/f-assigned.png"/> 
+                                                                    <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                                </span>
+                                                            </p>
+                                                         </div>
+                                                    </div>
+                                                    <div *ngIf="item.status==='Shipped'" id={{item.feature_id}}  class="card m-b-10" style="background-color: #c3e4de;">
+                                                            <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color:  #0eb3a2;">
+                                                                <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                                <span class="pull-right">{{item.story_points}}</span>
+                                                                </h5>
+                                                            </div>
+                                                            <div class="card-body p-10" style=" color: #000;">
+                                                                <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                                <p class="card-text m-b-0">{{item.status}}
+                                                                    <span class="pull-right">
+                                                                        <img src="../assets/images/action/f-assigned.png"/> 
+                                                                        <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                                    </span>
+                                                                </p>
+                                                             </div>
+                                                        </div>
+                                                        <div *ngIf="item.status==='Will not Implement'" id={{item.feature_id}}  class="card m-b-10" style="background-color: #c8c9cb;">
+                                                                <div class="card-header dd-handle m-t-0" id={{item.feature_id}}  style="background-color: #58585a;">
+                                                                    <h5 class="m-b-0 text-white" style="line-height: 12px;">FT-{{item.feature_id}}
+                                                                    <span class="pull-right">{{item.story_points}}</span>
+                                                                    </h5>
+                                                                </div>
+                                                                <div class="card-body p-10" style=" color: #000;">
+                                                                    <h6 class="card-title text-inverse m-b-0">{{item.feature_name}}</h6>
+                                                                    <p class="card-text m-b-0">{{item.status}}
+                                                                        <span class="pull-right">
+                                                                            <img src="../assets/images/action/f-assigned.png"/> 
+                                                                            <img src="../assets/images/action/f-edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/>
+                                                                        </span>
+                                                                    </p>
+                                                                 </div>
+                                                            </div>
+                      
+                            </li>
+                         
+                </ul>
+            </div>
+  </div></div></div>
+
+
+
+
+  <!-- sample modal content -->
+  <div id="responsive-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" style="line-height: 0.7; color: #000;">Feature One<br>
+                        <small style="font-size: 11px; color: #cccccc;">Created On: 14-05-2018</small>
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                <div class="modal-body">
+                    <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                                <div class="form-group m-b-10">
+                                    <label>Status:</label>
+                                    <select class="form-control">
+                                    <option>Under Consideration</option>
+                                    <option>In Design</option>
+                                    <option>Ready To Development</option>
+                                    <option>In Development</option>
+                                    <option>Ready To Ship</option>
+                                    <option>Shipped</option>
+                                    <option>Will Not Implemented</option>
+                                    </select>
+                                </div>
+                                <div class="form-group m-b-10">
+                                        <label>Releases:</label>
+                                        <select class="form-control">
+                                        <option>Release One</option>
+                                        <option>Release Two</option>
+                                        <option>Release Three</option>
+                                        <option>Release Four</option>
+                                        </select>
+                                </div>
+                                <div class="form-group m-b-10">
+                                        <label>Type:</label>
+                                        <select class="form-control">
+                                        <option>Improvement</option>
+                                        <option>Bug Fix</option>
+                                        <option>Research</option>
+                                        </select>
+                                </div>
+                                <div class="form-group m-b-10">
+                                        <label>Assigned To:</label>
+                                        <select class="form-control">
+                                        <option>Default User</option>
+                                        <option>User One</option>
+                                        <option>User Two</option>
+                                        </select>
+                                </div>
+                                <div class="form-group m-b-10">
+                                        <label>Description:</label>
+                                        <textarea name="textarea" class="form-control" placeholder=""></textarea>
+                                </div>
+                               
+                        </div>
+                        <div class="col-md-6">ALC Score: 25
+
+                            <div id="chartContainer" style="width: 218px !important; height: 300px !important"></div> 
+
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info waves-effect waves-light">Save</button>
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal -->

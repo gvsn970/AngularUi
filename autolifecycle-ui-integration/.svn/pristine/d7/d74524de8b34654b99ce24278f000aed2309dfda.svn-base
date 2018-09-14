@@ -1,0 +1,119 @@
+<script src="../assets/source/datatables/jquery.dataTables.min.js"></script>
+
+<div class="row page-titles">
+  <div class="col-lg-12">
+  <div class="col-md-7 align-self-center" style="float: left;">
+      <h3 class="text-themecolor">Sync Products</h3>
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/Portfolio">Portfolio</a></li>
+          <li class="breadcrumb-item"><a routerLink="/Product_Overview">Products</a></li>
+          <li class="breadcrumb-item active">Sync Products</li>
+      </ol>
+  </div>
+
+
+  
+  <div class="col-md-5 align-self-center text-right" style="float: right;">
+        <div class="input-group-prepend col-md-3" style="float: right;">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+                <div class="dropdown-menu">
+                        <a class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+                    </div>
+                </div>
+            
+                <!-- <div class="form-group col-md-6" style="float: right;">
+                  <button type="button" class="btn btn-warning" style="text-transform: uppercase;" routerLink="/Sync Releases">Sync</button>
+              </div> -->
+
+</div>
+
+
+</div>
+</div>
+
+
+
+
+      
+
+
+        <div class="col-md-12">
+            <div class="card">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs customtab" role="tablist">
+                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#map" role="tab"><span class="hidden-xs-down">Mapped Products</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#unmap" role="tab"><span class="hidden-xs-down">UnMapped Products</span></a> </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content m-b-30">
+                    <div class="tab-pane active" id="map" role="tabpanel">
+                        <div class="p-20">
+                            <table id="myTable1" class="table table-striped m-t-10">
+                                <thead>
+                                    <tr> 
+                                        
+                                        <th>Product Name</th>
+                                        <th>Product Line</th>
+                                        <th>Description</th>
+                                        
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id=msg{{item.product_id}} *ngFor="let item of mapped_list;i as index">
+                                        <td>{{item.product_name}}</td>
+                                        <td>{{item.product_line_name}}</td>
+                                        <td>{{item.product_desc}}</td>
+                                        
+                                 
+                                        <td id={{item.product_id}}  #sync><a *ngIf=true class="has-arrow waves-effect waves-dark i" #sync{{i}} name={{i}}  id={{item.product_id+i}}  (click)=syncFromAuto(sync.id,$event) ><img src="../assets/images/action/sfa.png" title="Sync From Auto"/></a> 
+                                                                        <a class="has-arrow waves-effect waves-dark" (click)=syncFromJira(sync.id,$event)><img src="../assets/images/action/sfj.png" title="Sync From Jira"/></a>
+                                                                    
+                                                                    </td>
+                                    </tr>
+                                    
+                                 </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-20" id="unmap" role="tabpanel">
+                        <table id="myTable2" class="table table-striped m-t-10">
+                            <thead>
+                                <tr> 
+                                    <th>Product Name</th>
+                                    <th>Product Line</th>
+                                     
+                                    <th>Boards</th>
+                                    <th>Map</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of unmapped_list">
+                                    <td>{{item.product_name}}</td>
+                                    <td>{{item.product_line_name}}</td>
+                                     
+                                    <td>
+                                        <div class="styled-select">
+                                            <select #boardid>
+                                                <option disabled style="background-color: #e9ecef;">Select Boards</option>
+                                                <option value="0">Create New</option>
+                                    <option *ngFor="let item of boards_list" value={{item.boardId}} >{{item.boardName}}</option>
+                                    
+                                            </select>
+                                            </div>
+                                    </td>
+                                    <td id={{item.product_id}}  #sync><a class="has-arrow waves-effect waves-dark" (click)=mapWithJira(sync.id,boardid.value) ><img src="../assets/images/action/mapping.png"/></a></td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+     

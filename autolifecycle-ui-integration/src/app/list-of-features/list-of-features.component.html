@@ -1,0 +1,241 @@
+<div class="row page-titles">
+    <div class="col-lg-12">
+        <div class="col-md-4 align-self-center" style="float: left;">
+      <h3 class="text-themecolor">List Of Features</h3>
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/Create Release">Features</a></li>
+          <li class="breadcrumb-item active">List Of Features</li>
+      </ol>
+</div>
+
+<div class="col-md-8 align-self-center text-right m-t-10" style="float: right;">
+
+    <div class="input-group-prepend col-md-2 p-l-0" style="float: right;">
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+    <div class="dropdown-menu">
+            <a class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+        </div>
+    </div>
+    <div class="form-group col-md-2 text-center" style="float: right;">
+        <button type="button" class="btn btn-warning" style="text-transform: uppercase;" routerLink="/Sync Features">Sync</button>
+    </div>
+
+    <div class="form-group col-md-3 p-r-0 p-l-0" style="float: right;">
+        <select name="select" (change)="productSelected($event)" id="select" required class="form-control" ngModel={{product_id}} #select>
+                 
+            <option *ngFor="let item of products_list" value={{item.product_id}}>{{item.product_name}}--{{item.product_line_name}}</option>
+          </select>
+</div>
+<div class="form-group col-md-3" style="float: right;">
+    <select name="select" (change)="releaseSelected($event)" id="select" required class="form-control" #select>
+                 
+        <option *ngFor="let item of release_list" value= {{item.releaseId}}>{{item.releasename}}</option>
+      </select>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="msg"> 
+        <div  *ngIf=success_message class="alert alert-success">  {{status_message}}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+              </div>
+      
+              <!-- <div  *ngIf=fail_message class="alert alert-danger">  {{status_message}}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                  </div> -->
+      
+      </div>
+
+<div *ngIf=no_feature class="col-lg-12"><div class="card"><div class="card-body">
+
+    <div   class="card p-30" > 
+        <h2 style="text-align: center;">No Features available for this Release<br><a style="color: #24d2b5;" routerLink="/Create Feature" > Create a Feature</a> </h2>
+
+       </div>
+
+    </div>
+    </div>
+    
+</div>
+
+<div *ngIf=no_release class="col-lg-12"><div class="card"><div class="card-body">
+
+    <div   class="card p-30" > 
+        <h2 style="text-align: center;">No Releases available for this Product<br><a style="color: #24d2b5;" routerLink="/Create Release" > Create a Release</a> </h2>
+
+       </div>
+
+    </div>
+    </div>
+    
+</div>
+
+<div *ngIf=!no_feature&&!no_release class="col-lg-12"><div class="card"><div class="card-body">
+
+
+  <div class="table-responsive m-t-0">
+    <table id="myTable1" class="table table-bordered table-striped m-t-10">
+        <thead>
+            <tr> 
+                <th>Feature reference</th>
+                <th>Feature name</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Score</th>
+                <th>Created On</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of feature_list">
+                <td *ngIf="item.status==='Under Consideration'"><i class="mdi mdi-brightness-1 m-r-10" style="color:#5a54a3;"></i>{{item.feature_id}}</td>
+                <td *ngIf="item.status==='In Design'"><i class="mdi mdi-brightness-1 m-r-10" style="color:#44abe1;"></i>{{item.feature_id}}</td>
+                <td *ngIf="item.status==='Ready to Develop'"><i class="mdi mdi-brightness-1 m-r-10" style="color:#faaa1d;"></i>{{item.feature_id}}</td>
+                <td *ngIf="item.status==='In Development'"><i class="mdi mdi-brightness-1 m-r-10" style="color:#603813;"></i>{{item.feature_id}}</td>
+                <td *ngIf="item.status==='Ready to Ship'"><i class="mdi mdi-brightness-1 m-r-10" style="color:#e83794;"></i>{{item.feature_id}}</td>
+                <td *ngIf="item.status==='Shipped'"><i class="mdi mdi-brightness-1 m-r-10" style="color:#0bb1a1;"></i>{{item.feature_id}}</td>
+                <td *ngIf="item.status==='Will not Implement'"><i class="mdi mdi-brightness-1 m-r-10" style="color:#58585b;"></i>{{item.feature_id}}</td>
+                
+                <!-- <td><i class="mdi mdi-brightness-1 m-r-10" style="color:#44abe1;"></i>RN1</td>
+                <td><i class="mdi mdi-brightness-1 m-r-10" style="color:#faaa1d;"></i>RN1</td>
+                <td><i class="mdi mdi-brightness-1 m-r-10" style="color:#603813;"></i>RN1</td>
+                <td><i class="mdi mdi-brightness-1 m-r-10" style="color:#e83794;"></i>RN1</td>
+                <td><i class="mdi mdi-brightness-1 m-r-10" style="color:#0bb1a1;"></i>RN1</td>
+                <td><i class="mdi mdi-brightness-1 m-r-10" style="color:#58585b;"></i>RN1</td>-->
+                <td>{{item.feature_name}}</td> 
+                <td>{{item.feature_type}}</td>
+                <td>{{item.status}}</td>
+                <td>{{item.story_points}}</td>
+                <td>{{item.createdOn}}</td>
+                <td> 
+                    <a (click)="onFeatureEdit(item.feature_id)" ><img src="../assets/images/action/view.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/></a> 
+                    <a (click)="onFeature(item.feature_id)"><img src="../assets/images/action/delete.png"   data-toggle="modal" data-target="#exampleModal"/></a> 
+                    <a (click)="onFeature(item.feature_id)"><img src="../assets/images/action/edit.png" data-toggle="modal" data-target="#responsive-modal" style="cursor: pointer;"/></a> 
+                </td>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    
+                    <h2 class="text-center m-t-30" style="font-weight: 600; font-size: 30px;">Are you sure?</h2>
+                    <div class="text-center m-b-30"> You want delete this release</div>
+                    
+                    <div class="text-center m-b-30">
+                    <button type="button" id="modal_close"class="btn btn-default" data-dismiss="modal">Cancel</button>
+                   
+                    <button type="button"  (click)="onDeleteFeature()"  class="btn btn-danger">Yes, delete it!</button>
+                  
+                    </div>
+                    </div>
+                    </div>
+                   </div>
+            </tr>
+             
+        </tbody>
+    </table>
+</div> 
+
+    
+</div></div></div>
+
+
+
+
+
+
+<!-- sample modal content -->
+<div id="responsive-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+          <div *ngFor="let item of feature" class="modal-content">
+              <div class="modal-header">
+                  <h4 class="modal-title" style="line-height: 0.7; color: #000;">{{item.feature_name}}<br>
+                     
+                  </h4>
+                  <div  *ngIf=popup_fail_message class="alert alert-danger">  {{status_message}}
+                                               
+                    </div>
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  </div>
+              <div class="modal-body">
+
+                  <form #updateFeature="ngForm" (ngSubmit) ="onFeatureUpdate(updateFeature.value)">
+                      <input name="feature_name" value={{item.feature_name}} hidden ngModel/>
+                  <div class="row">
+                      <div class="col-md-6">
+                              <div class="form-group m-b-10">
+                                  <label>Status:</label>
+                                  <select *ngIf=!edit name="status" (change)="statusSelected($event)" id="select" required class="form-control" ngModel={{status_id}} #select_status >
+                 
+                                    <option *ngFor="let item of feature_status_list" value= {{item.feature_status_id}}>{{item.status}}</option>
+                                  </select>
+                                  <select *ngIf=edit name="status" (change)="statusSelected($event)" id="select" required class="form-control" ngModel={{status_id}} #select_status disabled>
+                 
+                                        <option *ngFor="let item of feature_status_list" value= {{item.feature_status_id}}>{{item.status}}</option>
+                                      </select>
+                              </div>
+                              <div class="form-group m-b-10">
+                                      <label>Releases:</label>{{status_id}}
+                                      <select *ngIf=edit name="select" id="select" required class="form-control"   disabled #select>
+                                        
+                                        <option   value= {{item.fkReleaseId}}>{{item.releaseName}}</option>
+                                      </select>
+                                      <select *ngIf=!edit name="select" id="select" required class="form-control"   disabled #select>
+                                        
+                                            <option   value= {{item.fkReleaseId}}>{{item.releaseName}}</option>
+                                          </select>
+                              </div>
+                              <div class="form-group m-b-10">
+                                      <label>Type:</label>
+                                      <select   *ngIf=!edit name="type" (change)="typeSelected($event)"  id="select" required class="form-control"   [(ngModel)]="type_id" #select_type>
+              
+                                         
+                                        <option *ngFor="let item of feature_type_list" [value]="item.feature_type_id"  >{{item.feature_type}}</option>
+                                      </select>
+                                      <select   *ngIf=edit name="type" (change)="typeSelected($event)"  id="select" required class="form-control"   [(ngModel)]="type_id" #select_type disabled>
+              
+                                         
+                                            <option *ngFor="let item of feature_type_list" [value]="item.feature_type_id"  >{{item.feature_type}}</option>
+                                          </select>
+                              </div>
+                              <div class="form-group m-b-10">
+                                      <label>Assigned To:</label>
+                                      <select *ngIf=!edit name="select" (change)="userSelected($event)" id="select" required class="form-control" ngModel={{userId}} #select_user>
+                 
+                                        <option *ngFor="let item of users" value= {{item.userId}}>{{item.user_name}}</option>
+                                      </select>
+                                      <select *ngIf=edit name="select" (change)="userSelected($event)" id="select" required class="form-control" ngModel={{userId}} #select_user disabled>
+                 
+                                            <option *ngFor="let item of users" value= {{item.userId}}>{{item.user_name}}</option>
+                                          </select>
+                              </div>
+                              <div class="form-group m-b-10">
+                                      <label>Description:</label>
+                                      <textarea *ngIf=!edit name="feature_description" class="form-control" value={{item.feature_description}} ngModel={{item.feature_description}}></textarea>
+                                      <textarea *ngIf=edit name="feature_description" class="form-control" value={{item.feature_description}} ngModel={{item.feature_description}} disabled></textarea>
+                              </div>
+                             
+                      </div>
+                      <div class="col-md-6">ALC Score: {{item.story_points}}
+
+                              <svg width="250" height="130"></svg>
+
+                      </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-info waves-effect waves-light">Save</button>
+                  <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                </form>
+              </div>
+              
+               
+            
+          </div>
+      </div>
+  </div>
+  <!-- /.modal -->

@@ -1,0 +1,289 @@
+<div class="row page-titles">
+  <div class="col-lg-12">
+  <div class="col-md-5 align-self-center" style="float: left;">
+      <h3 class="text-themecolor">Create Release</h3>
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/Create Release">Releases</a></li>
+          <li class="breadcrumb-item active">Create Release</li>
+      </ol>
+  </div>
+  <div class="col-md-7 align-self-center text-right" style="float: right;">
+    <div class="input-group-prepend" style="float: right;">
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+    <div class="dropdown-menu">
+            <a class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+            <div role="separator" class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<div class="col-lg-12">
+<div class="card">
+    <div class="card-body">
+      
+
+            <div class="form-group m-t-10 col-md-8 offset-md-2 row">
+                    <label for="example-text-input" class="col-3 col-form-label text-right"></label>
+                    <div class="col-9">
+                        <div class="input-group">
+                            <ul class="icheck-list">
+                                <li>
+                                    <input type="radio"  name="ce" value="1"  class="radio" data-radio="iradio_flat-blue" ngModel>
+                                    <label>Create New Release</label>
+                                </li>
+                                <li>
+                                    <input type="radio"   name="ce" value="2" class="radio" data-radio="iradio_flat-blue" ngModel>
+                                    <label>Copy Existing Release</label>
+                                </li>
+                            </ul>
+                        </div>   
+                    </div>
+                  </div>
+       
+        <form  id="release_form"  class="m-t-40 col-md-8 offset-md-2"  #createRelease="ngForm" (ngSubmit)="upload(createRelease.value)">
+
+               
+                      
+
+          
+
+          
+          
+          <div id="ce1" class="desc">
+
+                <div class="form-group m-t-10 row">
+                        <label for="example-text-input" class="col-3 col-form-label text-right">Release Name:</label>
+                        <div class="col-9">
+                                <!-- <input data-validation="custom" data-validation-regexp="([^\s][A-z0-9À-ž\s]+[^\s])" type="text"> -->
+                        <input class="form-control"  data-validation="length alphanumeric" data-sanitize="trim" data-validation-length="min5" data-validation-allowing=" "  data-validation-error-msg-container="#name-error" name="Rname" id="example-text-input" type="text" ngModel>    
+                        <label  id="name-error" class="col-9 col-form-label text-left" style="color: brown;"> </label>
+                    </div>
+                      </div>
+            <div class="form-group m-t-10 row">
+                <label for="example-text-input" class="col-3 col-form-label text-right">Add New Release To:</label>
+                <div class="col-9">
+                <select (change)="productSelected($event)" data-validation="required" data-validation-error-msg-container="#select-error" name="Pid" id="select" required class="form-control" ngModel>
+                <option value="" disabled >Select Product</option>
+                <option *ngFor="let item of productList" value={{item.product_id}} >{{item.product_line_name}}--{{item.product_name}} </option>
+ 
+                </select>
+                <label  id="select-error" class="col-9 col-form-label text-left" style="color: brown;"> </label>
+                </div>
+             </div>
+
+             <div class="form-group m-t-10 row">
+                <label class="col-3 col-form-label text-right">Internal Release Date</label>
+                <div class="col-9">
+                       <input data-validation="required" data-validation-error-msg-container="#select-error1" type="date" name="Idate" class="form-control"  style="width: 100%;" ngModel/>
+                       <label  id="select-error1" class="col-9 col-form-label text-left" style="color: brown;"> </label>
+                    </div>
+             </div>
+             <div class="form-group m-t-10 row">
+                    <label class="col-3 col-form-label text-right">External Release Date</label>
+                    <div class="col-9">
+                            <input type="date" data-validation="required" data-validation-error-msg-container="#select-error2" name="Edate" class="form-control"  style="width: 100%;" ngModel/>
+                            <label  id="select-error2" class="col-9 col-form-label text-left" style="color: brown;"> </label>
+                        </div>
+                 </div>
+
+             
+                 
+             <div class="form-group m-t-10 row">
+                <label for="example-text-input" class="col-3 col-form-label text-right">Description:</label>
+                <div class="col-9">
+                <textarea name="textarea" id="textarea" name="Rdesc" class="form-control" placeholder="" ngModel></textarea>
+                </div>
+             </div>
+             
+             <div class="form-group m-t-10 row">
+               <label for="example-text-input" class="col-3 col-form-label text-right">Owner:</label>
+               <div class="col-9">
+               <select name="select" id="select" required class="form-control">
+               <option value="">Select User</option>
+               <option value="1">Auto_User</option>
+               
+               </select>
+               </div>
+            </div>
+
+            <div class="form-group m-t-10 row">
+                <label for="example-text-input" class="col-3 col-form-label text-right">Project Attachments:</label>
+                <div    class="col-9">
+                    <input type="file" (change)="selectFile($event)" multiple name="img[]" class="file"> 
+                    <div class="input-group col-xs-12">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+                    <input type="text"   class="form-control input-lg" disabled placeholder="Upload Files">
+                    <span class="input-group-btn">
+                    <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                    </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group m-t-10 row">
+                <label for="example-text-input" class="col-3 col-form-label text-right">Map With Jira:</label>
+                <div class="col-9">
+                    <input class="m-t-10" type="checkbox" name="jira_map1" id="jira_check_box" value="red"> 
+                    
+                    <div id="jira" class="red box">
+                        <div *ngIf=is_mapped >
+                              
+                                <div class="styled-select">
+                                    
+
+                            <select disabled>
+                                 
+                                <option  *ngFor="let item of sprintsList" value="" >{{item.boardName}}</option>
+                                 
+                            </select>
+                            </div>
+                            <br *ngIf=!no_sprints>
+                            <p style="color: orangered" *ngIf=no_sprints>{{jira_message}}</p>
+                            <div class="styled-select">
+                                <select name="sprint_id" ngModel>
+                                    <option disabled style="background-color: #e9ecef;">Select Sprint / Create New</option>
+                                    <option *ngIf=!no_sprints value="0">Create New</option>
+                                <option *ngFor="let item of sprintsList" value="{{item.sprintId}}" >{{item.sprintName}}</option>
+                                </select>
+                                </div>
+                        </div>
+
+                        <div *ngIf=!is_mapped>
+
+                                
+                                    <div  class="alert alert-warning  m-t-10">  {{jira_message}}
+                
+                                    </div>   
+                                
+                                
+        
+                            </div>
+
+
+                    </div> 
+                     
+                        
+                    
+
+                    
+                </div>
+            </div>
+
+             
+          </div>
+          <div id="ce2"class="desc" style="display: none;">
+
+                <div class="form-group m-t-10 row">
+                        <label for="example-text-input" class="col-3 col-form-label text-right">Release Name:</label>
+                        <div class="col-9">
+                        <input class="form-control" data-validation="length alphanumeric" data-sanitize="trim" data-validation-length="min5" data-validation-allowing="_ " data-validation-error-msg-container="#name-error2" name="R_name" id="example-text-input" type="text" ngModel>    
+                        <label  id="name-error2" class="col-9 col-form-label text-left" style="color: brown;"> </label>
+                    </div>
+                      </div>
+            <div class="form-group m-t-10 row">
+                <label for="example-text-input" class="col-3 col-form-label text-right">Release To Copy:</label>
+                <div class="col-9">
+                <select name="R_id" id="select" data-validation="required" data-validation-error-msg-container="#select-error4" class="form-control" ngModel>
+                <option value="">Select</option>
+                <option *ngFor="let item of releaseList"value={{item.releaseId}}>{{item.releaseName}}</option>
+                 
+                </select>
+                <label  id="select-error4" class="col-9 col-form-label text-left" style="color: brown;"> </label>
+                </div>
+             </div>
+                 
+             <div class="form-group m-t-10 row">
+                <label for="example-text-input" class="col-3 col-form-label text-right">Add New Release To:</label>
+                <div class="col-9">
+                <select (change)="productSelected($event)" name="P_id" id="select" data-validation="required" data-validation-error-msg-container="#select-error5" class="form-control" ngModel>
+                <option *ngFor="let item of productList"value={{item.product_id}} >{{item.product_line_name}}--{{item.product_name}} </option>
+                <option value="" disabled>Select Product</option>
+                 
+                </select>
+                <label  id="select-error5" class="col-9 col-form-label text-left" style="color: brown;"> </label>
+                </div>
+             </div>
+
+             <div class="form-group m-t-10 row">
+                <label for="example-text-input" class="col-3 col-form-label text-right">Map With Jira:</label>
+                <div class="col-9">
+                    <input class="m-t-10" type="checkbox" name="jira_map2" id="jira_check_box2" value="blue"> 
+                    <div class="blue box">
+                            <div *ngIf=is_mapped >
+                                    <div class="styled-select">
+                                <select disabled>
+                                     
+                                    <option  *ngFor="let item of sprintsList" value="" >{{item.boardName}}</option>
+                                     
+                                </select>
+                                </div>
+                                <br *ngIf=!no_sprints>
+                                <p style="color: orangered" *ngIf=no_sprints>{{jira_message}}</p>
+                                <div class="styled-select">
+                                    <select name="sprint_id" ngModel>
+                                        <option disabled style="background-color: #e9ecef;">Select Sprint / Create New</option>
+                                        <option value="0" *ngIf=!no_sprints>Create New</option>
+                                    <option *ngFor="let item of sprintsList" value="{{item.sprintId}}" >{{item.sprintName}}</option>
+                                    </select>
+                                    </div>
+                            </div>
+    
+                            <div *ngIf=!is_mapped>
+    
+                                    
+                                        <div  class="alert alert-warning  m-t-10">  {{jira_message}}
+                    
+                                        </div>   
+                                    
+                                    
+            
+                                </div>
+                    </div> 
+                    
+                </div>
+            </div>
+            
+             
+          </div>
+
+          <div class="form-group m-t-10 row">
+                <div class="col-3"></div>
+                <div class="col-9">
+                <button   type="submit" class="btn btn-info  m-t-10">Create</button>
+                
+                 
+                <div id="msg" *ngIf=success_message class="alert alert-success m-t-10"> 
+                     {{status_message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                    </div>
+    
+                    <div id="msg" *ngIf=fail_message class="alert alert-danger  m-t-10">  {{status_message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                        </div>
+
+                </div> 
+            </div>
+          
+             
+          
+        </form>
+        <!-- <label *ngIf=submited for="example-text-input" class="col-9 col-form-label text-right">Release created Successfully</label> -->
+                
+        
+        
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+

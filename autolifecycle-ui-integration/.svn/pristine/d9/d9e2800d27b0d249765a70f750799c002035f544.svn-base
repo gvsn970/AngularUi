@@ -1,0 +1,84 @@
+<div class="row page-titles">
+    <div class="col-lg-12">
+    <div class="col-md-5 align-self-center" style="float: left;">
+        <h3 class="text-themecolor">Product Line</h3>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/Portfolio">Portfolio</a></li>
+            <li class="breadcrumb-item active">Create Product Line</li>
+        </ol>
+    </div>
+    <div class="col-md-7 align-self-center text-right" style="float: right;">
+        <div class="input-group-prepend" style="float: right;">
+        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-transform: uppercase;">Create <i class="fa fa-plus"></i></button>
+        <div class="dropdown-menu">
+                <a class="dropdown-item" routerLink="/Create Product Line"><img src="../assets/images/products/cpl-icon.png"/> Product Line</a>
+                <div role="separator" class="dropdown-divider"></div>
+                <a class="dropdown-item" routerLink="/Create Product"><img src="../assets/images/products/p-icon.png"/> Products</a>
+                <div role="separator" class="dropdown-divider"></div>
+                <a class="dropdown-item" routerLink="/Create Release"><img src="../assets/images/products/r-icon.png"/> Releases</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<div class="col-lg-12">
+  <div class="card">
+      <div class="card-body">
+        
+
+          <form   class="m-t-40 col-md-8 offset-md-2" id="product_line_form" #createProductLine="ngForm" (ngSubmit) ="upload(createProductLine.value)" novalidate>
+
+                <div class="form-group m-t-10 row">
+                        <label for="example-text-input" class="col-3 col-form-label text-right">Product Line Name:</label>
+                        <div class="col-9">
+                            <input class="form-control" data-validation="length alphanumeric" data-validation-allowing=" " data-sanitize="trim" data-validation-length="min5"  data-validation-error-msg-container="#name-error" name="PLname" id="example-text-input" type="text" ngModel>
+                            <label  id="name-error" class="col-9 col-form-label text-left" style="color: brown;"> </label>
+                        </div>
+
+                </div>
+                <div class="form-group m-t-10 row">
+                            <label for="example-text-input" class="col-3 col-form-label text-right">Description:</label>
+                            <div class="col-9">
+                                    <textarea name="PLdesc" id="textarea" class="form-control" placeholder="" ngModel></textarea>
+                            </div>
+                </div>
+                <div class="form-group m-t-10 row">
+                    <label for="example-text-input" class="col-3 col-form-label text-right">Attachments:</label>
+                    <div    class="col-9">
+                        <input type="file" (change)="selectFile($event)" multiple name="img[]" class="file"> 
+                        <div class="input-group col-xs-12">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
+                        <input type="text"   class="form-control input-lg" disabled placeholder="Upload Files">
+                        <span class="input-group-btn">
+                        <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                        </span>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="form-group m-t-10 row">
+                <div class="col-3"></div>
+                <div class="col-9">
+                <button type="submit" class="btn btn-info">Create</button>
+                <div   id="msg" *ngIf=success_message class="alert alert-success m-t-10"> {{status_message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                    </div>
+
+                    <div id="msg"  *ngIf=fail_message class="alert alert-danger m-t-10" >  {{status_message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                        </div>
+
+                </div>
+                 
+                </div>
+                
+             </form>
+             <!-- <label *ngIf=submited for="example-text-input" class="col-9 col-form-label text-right">Product Line created Successfully</label> -->
+
+
+
+      </div>
+  </div>
+</div>
